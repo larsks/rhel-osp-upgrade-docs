@@ -121,6 +121,9 @@ RHOS 3.0 using `packstack`):
 will try (and fail) to start mysql-server rather than
 mariadb55-mysql-server. -->
 
+<!-- BUG: This requires at least openstack-nova-*-2013.2-3 due to a
+variety of dependency problems in prior releases. -->
+
 1. Run `packstack` to upgrade your configuration:
 
         # packstack --answer-file $ANSWERFILE
