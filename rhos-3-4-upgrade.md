@@ -1,8 +1,5 @@
-<!DOCTYPE html>
-<html>
-<title>Upgrading from RHOS 3.0 to RHOS 4.0</title>
-
-<xmp theme="united" style="display:none;">
+Upgrading RHOS 3.0 to RHOS 4.0
+==============================
 
 Prerequisites
 =============
@@ -157,9 +154,4 @@ Option 3: Rolling upgrades with a parallel compute region
 
 **Summary**: In this option, you will build up a separate pool of compute
 nodes, allowing your upgrade to complete without any downtime
-
-</xmp>
-
-<script src="http://strapdownjs.com/v/0.2/strapdown.js"></script>
-</html>
 
