@@ -73,7 +73,7 @@ environment in one piece.
 **Pros**: This is the simplest upgrade mechanism to implement.
 
 **Cons**: Your OpenStack services will be unavailable for the duration of
-the upgrade process, although running instances will be unaffected.
+the upgrade process.
 
 1. Shut down your OpenStack services.
 
@@ -101,18 +101,18 @@ RHOS 3.0 using `packstack`):
 
   - Replace all references to `QUANTUM` with `NEUTRON`:
 
-          # sed -i 's/CONFIG_QUANTUM/CONFIG_NEUTRON/' $ANSWERFILE
+            # sed -i 's/CONFIG_QUANTUM/CONFIG_NEUTRON/' $ANSWERFILE
 
   - Add the following lines to `$ANSWERFILE`:
 
-          CONFIG_MYSQL_INSTALL=y
-          CONFIG_CEILOMETER_INSTALL=y
-          CONFIG_HEAT_INSTALL=y
-          CONFIG_CINDER_BACKEND=lvm
-          CONFIG_HEAT_CLOUDWATCH_INSTALL=n
-          CONFIG_HEAT_CFN_INSTALL=n
-          CONFIG_NOVA_NETWORK_HOSTS=...
-          CONFIG_NOVA_NETWORK_MANAGER=nova.network.manager.FlatDHCPManager
+            CONFIG_MYSQL_INSTALL=y
+            CONFIG_CEILOMETER_INSTALL=n
+            CONFIG_HEAT_INSTALL=n
+            CONFIG_CINDER_BACKEND=lvm
+            CONFIG_HEAT_CLOUDWATCH_INSTALL=n
+            CONFIG_HEAT_CFN_INSTALL=n
+            CONFIG_NOVA_NETWORK_HOSTS=...
+            CONFIG_NOVA_NETWORK_MANAGER=nova.network.manager.FlatDHCPManager
 
 <!-- BUG: This will break because of the MariaDB upgrade.  Packstack
 will try (and fail) to start mysql-server rather than
@@ -120,6 +120,9 @@ mariadb55-mysql-server. -->
 
 <!-- BUG: This requires at least openstack-nova-*-2013.2-3 due to a
 variety of dependency problems in prior releases. -->
+
+<!-- BUG: This may also fail due to parsing bugs in the Keystone
+puppet provider provided by the openstack-puppet modules. -->
 
 1. Run `packstack` to upgrade your configuration:
 
@@ -153,5 +156,9 @@ Option 3: Rolling upgrades with a parallel compute region
 ---------------------------------------------------------
 
 **Summary**: In this option, you will build up a separate pool of compute
-nodes, allowing your upgrade to complete without any downtime
+nodes, allowing you to minimize downtime to the compute service.
+
+**Pros**:
+
+**Cons**:
 
