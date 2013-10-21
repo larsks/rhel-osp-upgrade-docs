@@ -2,7 +2,7 @@
 <html>
 <title>Upgrading from RHOS 3.0 to RHOS 4.0</title>
 
-<xmp theme="spacelab" style="display:none;">
+<xmp theme="united" style="display:none;">
 
 Prerequisites
 =============
@@ -84,6 +84,8 @@ On all of the nodes in your OpenStack deployment:
 
 1. Enable the RHOS 4.0 software repository.
 
+<!-- BUG: There may be an issue upgrading python-urllib3. -->
+
 1. Perform a complete upgrade:
 
         # yum update
@@ -98,16 +100,30 @@ RHOS 3.0 using `packstack`):
         # cinder-manage db sync
         # keystone-manage db_sync
 
-1. Upgrade your `packstack` answers file.  This step is optional,
-   because `packstack` will prompt you for any missing information,
-   but if you are using `quantum` networking this will save you from
-   re-typing answers:
+1. Upgrade your `packstack` answers file.
 
-        # sed -i 's/CONFIG_QUANTUM/CONFIG_NEUTRON/' packstack-answers....txt
+  - Replace all references to `QUANTUM` with `NEUTRON`:
+
+          # sed -i 's/CONFIG_QUANTUM/CONFIG_NEUTRON/' $ANSWERFILE
+
+  - Add the following lines to `$ANSWERFILE`:
+
+          CONFIG_MYSQL_INSTALL=y
+          CONFIG_CEILOMETER_INSTALL=y
+          CONFIG_HEAT_INSTALL=y
+          CONFIG_CINDER_BACKEND=lvm
+          CONFIG_HEAT_CLOUDWATCH_INSTALL=n
+          CONFIG_HEAT_CFN_INSTALL=n
+          CONFIG_NOVA_NETWORK_HOSTS=...
+          CONFIG_NOVA_NETWORK_MANAGER=nova.network.manager.FlatDHCPManager
+
+<!-- BUG: This will break because of the MariaDB upgrade.  Packstack
+will try (and fail) to start mysql-server rather than
+mariadb55-mysql-server. -->
 
 1. Run `packstack` to upgrade your configuration:
 
-        # packstack --answer-file packstack-answers....txt
+        # packstack --answer-file $ANSWERFILE
 
 1. Restart your OpenStack services. 
 
