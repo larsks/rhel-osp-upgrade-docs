@@ -8,7 +8,7 @@
   ## the comment should include the relevant bugzilla link.
   -->
 
-<xmp theme="united" style="display:none;">
+<xmp theme="bootstrap" style="display:none;">
 Prerequisites
 =============
 
@@ -31,29 +31,29 @@ in RHEL is available as part of a [software collection][scl].
 
 1. Shut down and disable mysql:
 
-        # service mysqld stop
-        # chkconfig mysqld off
+       # service mysqld stop
+       # chkconfig mysqld off
 
 1. Install the `mariadb55` software collection:
 
-        # yum install mariadb55
+       # yum install mariadb55
 
 1. Relocate the MySQL data files to the location used by the MariaDB
 package:
 
-        # rm -rf /opt/rh/mariadb55/root/var/lib/mysql/
-        # cp -r /var/lib/mysql/ /opt/rh/mariadb55/root/var/lib/mysql/
-        # chown -R mysql:mysql /opt/rh/mariadb55/root/var/lib/mysql/
-        # restorecon -R /opt/rh/mariadb55/root/var/lib/mysql/
+       # rm -rf /opt/rh/mariadb55/root/var/lib/mysql/
+       # cp -r /var/lib/mysql/ /opt/rh/mariadb55/root/var/lib/mysql/
+       # chown -R mysql:mysql /opt/rh/mariadb55/root/var/lib/mysql/
+       # restorecon -R /opt/rh/mariadb55/root/var/lib/mysql/
 
 1. Start the MariaDB server (and configure it to start a boot):
 
-        # service mariadb55-mysqld start
-        # chkconfig mariadb55-mysqld on
+       # service mariadb55-mysqld start
+       # chkconfig mariadb55-mysqld on
 
 1. Upgrade the databases:
 
-        # scl enable mariadb55 mysql_upgrade
+       # scl enable mariadb55 mysql_upgrade
 
 1. [Restart your OpenStack services](#startup).
 
@@ -100,27 +100,28 @@ RHOS 3.0 using `packstack`):
 
 1. Upgrade your OpenStack databases to the new schemas:
 
-        # nova-manage db sync
-        # glance-manage db_sync
-        # cinder-manage db sync
-        # keystone-manage db_sync
+       # nova-manage db sync
+       # glance-manage db_sync
+       # cinder-manage db sync
+       # keystone-manage db_sync
 
 1. Upgrade your `packstack` answers file.
 
   - Replace all references to `QUANTUM` with `NEUTRON`:
 
-          # sed -i 's/CONFIG_QUANTUM/CONFIG_NEUTRON/' $ANSWERFILE
+         # sed -i 's/CONFIG_QUANTUM/CONFIG_NEUTRON/' $ANSWERFILE
 
   - Add the following lines to `$ANSWERFILE`:
 
-          CONFIG_MYSQL_INSTALL=y
-          CONFIG_CEILOMETER_INSTALL=n
-          CONFIG_HEAT_INSTALL=n
-          CONFIG_CINDER_BACKEND=lvm
-          CONFIG_HEAT_CLOUDWATCH_INSTALL=n
-          CONFIG_HEAT_CFN_INSTALL=n
-          CONFIG_NOVA_NETWORK_HOSTS=...
-          CONFIG_NOVA_NETWORK_MANAGER=nova.network.manager.FlatDHCPManager
+         CONFIG_MYSQL_INSTALL=y
+         CONFIG_CEILOMETER_INSTALL=n
+         CONFIG_HEAT_INSTALL=n
+         CONFIG_CINDER_BACKEND=lvm
+         CONFIG_HEAT_CLOUDWATCH_INSTALL=n
+         CONFIG_HEAT_CFN_INSTALL=n
+         CONFIG_NOVA_NETWORK_HOSTS=...
+         CONFIG_NOVA_NETWORK_MANAGER=nova.network.manager.FlatDHCPManager
+         CONFIG_PROVISION_DEMO_FLOATRANGE=y
 
     (These are either defaults assumed by the RHOS 3.0 version of
     `packstack` or new features that were not available under RHOS
@@ -249,7 +250,7 @@ command:
     +--------------------------------------+-------+--------+--------------------------+
 
 </xmp>
-<script src="http://strapdownjs.com/v/0.2/strapdown.js"></script>
+<script src="strapdown/v/0.2/strapdown.js"></script>
 </html>
 
 <!-- vim: set ft=markdown : -->
