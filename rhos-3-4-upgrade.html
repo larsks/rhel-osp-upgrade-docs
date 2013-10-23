@@ -18,6 +18,7 @@ Upgrade RHEL 6.4 to RHEL 6.5
 RHOS 4.0 will not run on RHEL 6.4.  Before beginning the RHOS upgrade
 process you must upgrade to RHEL 6.5.
 
+<!--
 Upgrade MySQL 5.1 to MariaDB
 ----------------------------
 
@@ -27,6 +28,7 @@ in RHEL is available as part of a [software collection][scl].
 
 [mariadb]: mysql-to-mariadb.html
 [scl]: https://access.redhat.com/site/documentation/en-US/Red_Hat_Software_Collections/1/html/1.0_Release_Notes/index.html
+-->
 
 Upgrading from RHOS 3.0 to RHOS 4.0
 ===================================
@@ -51,24 +53,35 @@ environment in one piece.
 **Cons**: Your OpenStack services will be unavailable for the duration of
 the upgrade process.
 
+### On all of your nodes
+
 1. [Shut down your OpenStack services](#shutdown).
 
-On all of the nodes in your OpenStack deployment:
-
-1. If you are using Quantum networking under RHOS 3.0, please follow
-   [these instructions](quantum-to-neutron.html) to prepare for the
-   upgrade to Neutron.
+### On your compute nodes
 
 1. Enable the RHOS 4.0 software repository.
 
-<!-- BUG: There may be an issue upgrading python-urllib3. -->
+<!-- BUG: There may be an issue upgrading python-urllib3.
+    https://bugzilla.redhat.com/show_bug.cgi?id=1021991
+    -->
 
 1. Perform a complete upgrade:
 
         # yum update
 
-On your "controller" node (the one from which you originally deployed
-RHOS 3.0 using `packstack`):
+### On your controller nodes
+
+1. If you are using Quantum networking under RHOS 3.0, please follow
+   [Neutron pre-upgrade instructions](quantum-to-neutron.html) to
+   prepare for the upgrade to Neutron.
+
+1. Enable the RHOS 4.0 software repository.
+
+1. Perform a complete upgrade:
+
+        # yum update
+
+   <!-- BUG: There may be an issue upgrading python-urllib3. -->
 
 1. Upgrade your OpenStack databases to the new schemas:
 
@@ -76,6 +89,10 @@ RHOS 3.0 using `packstack`):
        # glance-manage db_sync
        # cinder-manage db sync
        # keystone-manage db_sync
+
+1. If you are using Quantum networking under RHOS 3.0, please follow
+   [Neutron post-upgrade instructions](quantum-to-neutron.html) to
+   complete the upgrade to Neutron.
 
 1. Upgrade your `packstack` answers file.
 
@@ -99,26 +116,31 @@ RHOS 3.0 using `packstack`):
     `packstack` or new features that were not available under RHOS
     3.0.)
 
-<!-- BUG: This will break because of the MariaDB upgrade.  Packstack
-will try (and fail) to start mysql-server rather than
-mariadb55-mysql-server. -->
-
-<!-- BUG: This requires at least openstack-nova-*-2013.2-3 due to a
-variety of dependency problems in prior releases. -->
-
-<!-- BUG: This may also fail due to parsing bugs in the Keystone
-puppet provider provided by the openstack-puppet modules. -->
+   <!-- BUG: This will break because of the MariaDB upgrade.  Packstack
+        will try (and fail) to start mysql-server rather than
+        mariadb55-mysql-server. -->
+   
+   <!-- BUG: This requires at least openstack-nova-*-2013.2-3 due to a
+        variety of dependency problems in prior releases. -->
+   
+   <!-- BUG: This may also fail due to parsing bugs in the Keystone
+        puppet provider provided by the openstack-puppet modules.
+        https://bugzilla.redhat.com/show_bug.cgi?id=1022686
+        -->
 
 1. Run `packstack` to upgrade your configuration:
 
        # packstack --answer-file $ANSWERFILE
+
+### On all your nodes
 
 1. Restart your OpenStack services. 
 
 If running `yum update` installed a new kernel package, you will need
 to reboot your servers in order to activate the new kernel.  Rebooting
 your compute nodes will interrupt any instances currently running on
-those nodes.
+those nodes.  You can [reboot your instances](#reboot_instance) to
+recover from this situation.
 
 Option 2:  Rolling (component-by-component) upgrades
 ----------------------------------------------------
