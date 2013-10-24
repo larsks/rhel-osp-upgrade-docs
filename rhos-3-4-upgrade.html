@@ -8,7 +8,7 @@
   ## the comment should include the relevant bugzilla link.
   -->
 
-<xmp theme="bootstrap" style="display:none;">
+<xmp theme="journal" style="display:none;">
 Prerequisites
 =============
 
@@ -81,7 +81,9 @@ the upgrade process.
 
         # yum update
 
-   <!-- BUG: There may be an issue upgrading python-urllib3. -->
+   <!-- BUG: There may be an issue upgrading python-urllib3.
+        https://bugzilla.redhat.com/show_bug.cgi?id=1021991
+        -->
 
 1. Upgrade your OpenStack databases to the new schemas:
 
@@ -119,9 +121,6 @@ the upgrade process.
    <!-- BUG: This will break because of the MariaDB upgrade.  Packstack
         will try (and fail) to start mysql-server rather than
         mariadb55-mysql-server. -->
-   
-   <!-- BUG: This requires at least openstack-nova-*-2013.2-3 due to a
-        variety of dependency problems in prior releases. -->
    
    <!-- BUG: This may also fail due to parsing bugs in the Keystone
         puppet provider provided by the openstack-puppet modules.
