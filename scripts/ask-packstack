@@ -1,0 +1,14 @@
+#!/bin/sh
+
+if ! [ "$PACKSTACK_ANSWERS" ]; then
+	echo "ERROR: You must set PACKSTACK_ANSWERS to point at your packstack answers file." >&2
+	exit 1
+fi
+
+if ! [ -f "$PACKSTACK_ANSWERS" ]; then
+	echo "ERROR: answer file $PACKSTACK_ANSWERS does not exist." >&2
+	exit 1
+fi
+
+openstack-config --get $PACKSTACK_ANSWERS general $1
+
