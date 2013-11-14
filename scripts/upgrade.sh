@@ -35,10 +35,10 @@ upgrade_keystone () {
 	openstack-service start keystone
 	EOF
 
-	# Make sure the client is upgraded everywhere.
-	for host in $all_hosts; do
-		batchssh root@$host "yum -y -d1 upgrade \*keystone\*"
-	done
+#	# Make sure the client is upgraded everywhere.
+#	for host in $all_hosts; do
+#		batchssh root@$host "yum -y -d1 upgrade \*keystone\*"
+#	done
 
 	log "finished upgrading keystone"
 }
@@ -54,10 +54,10 @@ upgrade_swift () {
 		EOF
 	done
 
-	# Make sure the client is upgraded everywhere.
-	for host in $all_hosts; do
-		batchssh root@$host "yum -y -d1 upgrade \*swift\*"
-	done
+#	# Make sure the client is upgraded everywhere.
+#	for host in $all_hosts; do
+#		batchssh root@$host "yum -y -d1 upgrade \*swift\*"
+#	done
 
 	log "finished upgrading swift"
 }
@@ -72,10 +72,10 @@ upgrade_cinder () {
 	openstack-service start cinder
 	EOF
 
-	# Make sure the client is upgraded everywhere.
-	for host in $all_hosts; do
-		batchssh root@$host "yum -y -d1 upgrade \*cinder\*"
-	done
+#	# Make sure the client is upgraded everywhere.
+#	for host in $all_hosts; do
+#		batchssh root@$host "yum -y -d1 upgrade \*cinder\*"
+#	done
 
 	log "finished upgrading cinder"
 }
@@ -90,16 +90,16 @@ upgrade_glance () {
 	openstack-service start glance
 	EOF
 
-	# Make sure the client is upgraded everywhere.
-	for host in $all_hosts; do
-		batchssh root@$host "yum -y -d1 upgrade \*glance\*"
-	done
-
-	# need to restart various nova services after glanceclient upgrade
-	batchssh root@$nova_api_host openstack-service restart nova-api
-	for host in $nova_compute_hosts; do
-		batchssh root@$host openstack-service restart nova-compute
-	done
+#	# Make sure the client is upgraded everywhere.
+#	for host in $all_hosts; do
+#		batchssh root@$host "yum -y -d1 upgrade \*glance\*"
+#	done
+#
+#	# need to restart various nova services after glanceclient upgrade
+#	batchssh root@$nova_api_host openstack-service restart nova-api
+#	for host in $nova_compute_hosts; do
+#		batchssh root@$host openstack-service restart nova-compute
+#	done
 
 	log "finished upgrading glance"
 }
@@ -152,12 +152,16 @@ upgrade_neutron () {
 
 	for host in $network_host $nova_compute_hosts; do
 		log "upgrading quantum packages on $host"
+
 		cat <<-'EOF' | batchssh root@$host bash
 		openstack-service stop quantum
 		openstack-service list quantum > /tmp/quantum-enabled-services
 		userdel quantum
 		yum -y -d1 upgrade \*quantum\*
+		yum -y -d1 install python-babel python-oslo-config
 
+		# This may become unnecessary with recent changes
+		# to the Neutron packaging.
 		find /etc/quantum -name '*.rpmsave' | while read cf; do
 			[ -f $cf ] || continue
 
@@ -176,6 +180,8 @@ upgrade_neutron () {
 			ln -sf ${plugin_ini//quantum/neutron} /etc/neutron/plugin.ini
 		fi
 
+		# enable neutron services corresponding to previously
+		# enabled quantum services.
 		sed s/quantum/neutron/ /tmp/quantum-enabled-services | 
 			xargs -iSVC chkconfig SVC on
 		EOF
@@ -184,7 +190,7 @@ upgrade_neutron () {
 	# install python-neutronclient anywhere we find
 	# python-quantumclient
 	for host in $all_hosts; do
-		cat <<-'EOF' | batch batchssh root@$host bash
+		cat <<-'EOF' | batchssh batchssh root@$host bash
 		if rpm -q --quiet python-quantumclient; then
 			yum -y -d1 install python-neutronclient
 		fi
@@ -211,18 +217,64 @@ upgrade_neutron () {
 upgrade_horizon () {
 	log "start upgrade horizon"
 
-	cat <<-'EOF' | batchssh root@$horizon_host root
+	cat <<-'EOF' | batchssh root@$horizon_host bash
 	yum -y -d1 upgrade \*horizon\* \*openstack-dashboard\*
+	yum -y -d1 install python-pbr
+	if [ ! -f /etc/openstack-dashboard/local_settings.save ]; then
+		cp /etc/openstack-dashboard/local_settings \
+			/etc/openstack-dashboard/local_settings.save
+	fi
+
+	new=/etc/openstack-dashboard/local_settings.rpmnew
+	old=/etc/openstack-dashboard/local_settings.save
+	active=/etc/openstack-dashboard/local_settings
+
+	sed '
+		1,/^DEBUG/ {
+			/^DEBUG/ b
+		}' < $new > $active
+
+	egrep '^(DEBUG|TEMPLATE_DEBUG|PROD|USE_SSL|SECRET_KEY|LOCAL_PATH|CACHE_BACKEND|OPENSTACK_HOST)' \
+		$old >> $active
+
+	echo "ALLOWED_HOSTS = [ '*' ]" >> $active
+
+	egrep -v '^(ALLOWED_HOSTS|DEBUG|TEMPLATE_DEBUG|PROD|USE_SSL|SECRET_KEY|LOCAL_PATH|CACHE_BACKEND|OPENSTACK_HOST)' \
+		$new >> $active
+
 	service httpd restart
 	EOF
 
 	log "finished upgrade horizon"
 }
 
+upgrade_packstack () {
+	log "start upgrade packstack answers file"
+	(
+	sed 's/CONFIG_QUANTUM/CONFIG_NEUTRON/g' $PACKSTACK_ANSWERS
+	cat <<-EOF
+
+	CONFIG_MYSQL_INSTALL=y
+	CONFIG_CEILOMETER_INSTALL=n
+	CONFIG_HEAT_INSTALL=n
+	CONFIG_CINDER_BACKEND=lvm
+	CONFIG_HEAT_CLOUDWATCH_INSTALL=n
+	CONFIG_HEAT_CFN_INSTALL=n
+	CONFIG_NOVA_NETWORK_MANAGER=nova.network.manager.FlatDHCPManager
+	CONFIG_PROVISION_DEMO_FLOATRANGE=172.24.4.224/28
+	EOF
+	) > $PACKSTACK_ANSWERS.new
+
+	log "finished upgrade packstack answers file"
+}
+
 upgrade_cleanup () {
 	for host in $all_hosts; do
 		log "start upgrade all packages on $host"
-		batchssh root@$host yum -y -d1 upgrade
+		cat <<-'EOF' | batchssh root@$host bash
+		yum -y -d1 upgrade
+		openstack restart nova-compute
+		EOF
 		log "finished upgrade all packages on $host"
 	done
 
@@ -287,6 +339,7 @@ workdir=$(mktemp -d /var/tmp/osupgradeXXXXXX)
 trap 'rm -rf $workdir' EXIT
 
 install_havana_repo
+upgrade_packstack
 upgrade_keystone
 upgrade_swift
 upgrade_cinder
