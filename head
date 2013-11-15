@@ -8,3 +8,12 @@
 	<head>            
 		<title>TITLE</title>
     <link rel="stylesheet" href="markdown.css"></link>
+    <link rel="stylesheet" href="menu.css"></link>
+	</head>
+	<body>
+    <ul class="menu">
+      <li><a href="overview.html">overview</a></li>
+      <li><a href="upgrade-1.html">scenario 1</a></li>
+      <li><a href="upgrade-2.html">scenario 2</a></li>
+      <li><a href="upgrade-3.html">scenario 3</a></li>
+    </ul>
