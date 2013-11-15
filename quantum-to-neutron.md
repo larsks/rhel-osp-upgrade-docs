@@ -1,50 +1,60 @@
-<!DOCTYPE html>
-<html>
-<title>Upgrading from Quantum to Neutron</title>
-<xmp theme="bootstrap" style="display:none;">
+# Quantum to Neutron Database Upgrade
 
-Pre-upgrade
-===========
+Note that newer versions of the Neutron packages handle most of this
+for you (with the exception of the actual database schema upgrade).
 
-Before upgrading to RHOS 4.0:
+## Pre-upgrade
 
-1. Prepare the `ovs_quantum` database for migration:
+Before upgrading to Neutron:
 
-       # quantum-db-manage --config-file /etc/quantum/quantum.conf \
-         --config-file /etc/quantum/plugin.ini stamp grizzly
+1. Stop Quantum services on all of your hosts:
 
-1. Preserve `/etc/quantum/quantum.conf` and `/etc/quantum/plugin.ini`:
+         # openstack-service stop quantum
 
-       # cp /etc/quantum/quantum.conf /etc/quantum/plugin.ini \
-         /root/
+1. Remove the `quantum` user from all of your hosts:
 
-1. Remove the `quantum` user from your system:
+         # userdel quantum
 
-       # userdel quantum
+1. Prepare the `ovs_quantum` database for migration.  On the Quantum
+   server, run:
 
-Post-upgrade
-============
+         # quantum-db-manage --config-file /etc/quantum/quantum.conf \
+           --config-file /etc/quantum/plugin.ini stamp grizzly
 
-After upgrading to RHOS 4.0, but before running `packstack`:
+
+## Post-upgrade
+
+After upgrading to Neutron (but *before* starting Neutron services):
+
+1. Migrate your Quantum configuration files in `/etc/quantum` to
+   `/etc/neutron`.  This generally involves replacing `quantum` with
+   `neutron` in your settings.  The following script will perform this
+   migration:
+
+        find /etc/quantum -name '*.rpmsave' | while read cf; do
+          [ -f $cf ] || continue
+
+          newcf=${cf/.rpmsave/}
+          newcf=${newcf//quantum/neutron}
+          sed '
+            /^sql_connection/ b
+            /^admin_user/ b
+            s/quantum/neutron/g
+            s/Quantum/Neutron/g
+          ' $cf > $newcf
+        done
+
+        if [ -h /etc/quantum/plugin.ini ]; then
+          plugin_ini=$(readlink /etc/quantum/plugin.ini)
+          ln -sf ${plugin_ini//quantum/neutron} /etc/neutron/plugin.ini
+        fi
 
 1. Upgrade the `ovs_quantum` database schema for OpenStack Havana:
 
-       # neutron-db-manage --config-file /root/quantum.conf \
-         --config-file /root/plugin.ini upgrade havana
+        # neutron-db-manage \
+          --config-file /etc/neutron/neutron.conf \
+          --config-file /etc/neutron/plugin.ini upgrade head
 
-   (Note that we are using the configuration files preserved in the
-   pre-upgrade step.)
+    (Note that we are using the configuration files preserved in the
+    pre-upgrade step.)
 
-1. Create a new `ovs_neutron` database:
-
-       # mysqladmin create ovs_neutron
-
-1. Dump the `ovs_quantum` database to the new `ovs_neutron` database:
-
-       # mysqldump ovs_quantum | mysql ovs_neutron
-
-</xmp>
-<script src="strapdown/v/0.2/strapdown.js"></script>
-</html>
-
-<!-- vim: set ft=markdown : -->
