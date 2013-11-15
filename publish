@@ -2,6 +2,7 @@
 
 rm -f index.html
 ln -s overview.html index.html
+make
 rsync -a --delete --exclude=.git/ . \
 	shell.bos.redhat.com:public_html/rhos-upgrade-docs/
 
