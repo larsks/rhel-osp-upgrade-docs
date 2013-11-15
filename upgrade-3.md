@@ -26,7 +26,7 @@ upgrade the computer service on that node.
      Your Havana compute environment *must* use a database
      distinct from that used by your Grizzly environment.
 
-1. Ensure that you new environment can see identity information,
+1. Ensure that your new environment can see identity information,
    images, volumes and other items in your existing environment.
 
 1. Ensure that your community is able to access the new dashboard and
