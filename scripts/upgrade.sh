@@ -273,7 +273,7 @@ upgrade_cleanup () {
 		log "start upgrade all packages on $host"
 		cat <<-'EOF' | batchssh root@$host bash
 		yum -y -d1 upgrade
-		openstack restart nova-compute
+		openstack-service restart nova-compute
 		EOF
 		log "finished upgrade all packages on $host"
 	done
