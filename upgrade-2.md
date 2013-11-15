@@ -2,8 +2,8 @@
 
 In this scenario, you upgrade one service at a time.
 
-The procedure for upgrading an OpenStack generally looks something
-like:
+The procedure for upgrading an OpenStack service generally looks
+something like:
 
 1. [Stop the service][stop]:
 
