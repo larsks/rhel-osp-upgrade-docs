@@ -1,15 +1,1 @@
-database-upgrades.html
-index.html
-overview.html
-quantum-to-neutron.html
-service.html
-upgrade-1.html
-upgrade-2.html
-upgrade-3.html
-upgrade-cinder.html
-upgrade-glance.html
-upgrade-horizon.html
-upgrade-keystone.html
-upgrade-nova.html
-upgrade-quantum.html
-upgrade-swift.html
+*.html
