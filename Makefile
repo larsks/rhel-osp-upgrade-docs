@@ -14,7 +14,8 @@ MDDOCS= \
 	upgrade-keystone.md \
 	upgrade-nova.md \
 	upgrade-quantum.md \
-	upgrade-swift.md
+	upgrade-swift.md \
+	parallel-nova.md
 
 HTMLDOCS= $(MDDOCS:.md=.html)
 

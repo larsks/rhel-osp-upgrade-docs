@@ -17,20 +17,13 @@ upgrade the computer service on that node.
 
 ## Deploy the new compute environment
 
-1. Set up a parallel compute environment: install a new Nova controller, Horizon server, and compute nodes using the Havana repositories.
+1. [Set up a parallel compute environment][parallel]: install a new Nova controller  and compute nodes using the Havana repositories.
 
      These systems will use a configuration generally identical to that
      on your Grizzly Nova nodes.  They will be making use of the
      same Keystone, Glance, Cinder, etc. services.
 
-     Your Havana compute environment *must* use a database
-     distinct from that used by your Grizzly environment.
-
-1. Ensure that your new environment can see identity information,
-   images, volumes and other items in your existing environment.
-
-1. Ensure that your community is able to access the new dashboard and
-   API services.
+[parallel]: parallel-nova.html
 
 ## Move instances to the new environment
 
