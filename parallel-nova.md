@@ -168,7 +168,8 @@ to make several changes to `/etc/nova/nova.conf`:
 
          $ nova --os-region-name Havana host-list
    
-     You should see output similar to:
+     You should see output listing your new Havana Nova hosts.  For
+     example:
 
          +-------------------------------------------+----------------+----------+
          | host_name                                 | service        | zone     |
