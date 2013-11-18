@@ -148,6 +148,20 @@ to make several changes to `/etc/nova/nova.conf`:
            --publicurl http://192.168.122.198:8774/v2/%(tenant_id)s \
            --adminurl http://192.168.122.198:8774/v2/%(tenant_id)s \
            --internalurl http://192.168.122.198:8774/v2/%(tenant_id)s
+
+1. If you will need volume attachment to work in your Havana
+   environment, create a new endpoint for the Cinder service in your
+   new region.
+
+         $ keystone service-get cinder
+         ...
+         $ keystone endpoint-list
+         ...
+         $ keystone endpoint-create --region Havana \
+            --service-id 1a6f2343a6f14bc9b5a2c2f4e4a894ca \
+            --publicurl 'http://192.168.122.110:8776/v1/%(tenant_id)s' \
+            --adminurl 'http://192.168.122.110:8776/v1/%(tenant_id)s' \
+            --internalurl 'http://192.168.122.110:8776/v1/%(tenant_id)s'
  
 1. Verify that you can communicate with the new region.  After loading
    appropriate keystone credentials, run:
