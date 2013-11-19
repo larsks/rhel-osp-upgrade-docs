@@ -9,8 +9,7 @@ and when a Grizzly compute node is no longer hosting any instances you
 upgrade the computer service on that node.
 
 1. Follow the procedure for [scenario 2][s2], but stop after completing
-   the Quantum to Neutron upgrade (do not upgrade either Nova or
-   Horizon).
+   the Horizon upgrade (do not upgrade Nova).
 
    You will want to run the final `yum upgrade` on systems that are
    not running Nova services.

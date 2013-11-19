@@ -45,8 +45,8 @@ which to perform the upgrade:
 1. [Glance][]
 1. [Quantum/Neutron][quantum] (only if you are using Quantum
    networking in your Grizzly environment)
-1. [Nova][]
 1. [Horizon][]
+1. [Nova][]
 
 After you have upgraded each service, you should test to make sure
 that the service is functioning properly.  You will also want to
