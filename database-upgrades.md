@@ -40,5 +40,5 @@ On the Neutron host, run:
 `openstack-neutron` package.  If you have an older version of this
 package, see these [extended upgrade instructions][q-to-n].
 
-[q-to-n]: quantum-to-neutron.md
+[q-to-n]: quantum-to-neutron.html
 
