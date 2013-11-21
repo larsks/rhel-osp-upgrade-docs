@@ -1,5 +1,19 @@
 # Database upgrades
 
+In general, if you have the `openstack-utils` package installed you
+can use the `openstack-db` command to perform the below operations by
+running:
+
+    openstack-db --service <service> --update
+
+For example:
+
+    openstack-db --service keystone --update
+
+This will run the database upgrade command appropriate for that
+service.  For reference purposes, here are the actual commands that
+will be run by `openstack-db`:
+
 ## Keystone
 
 On the Keystone host, run:
@@ -36,7 +50,7 @@ On the Neutron host, run:
       --config-file /etc/neutron/neutron.conf \
       --config-file /etc/neutron/plugin.ini upgrade head
 
-**NB**: These instructions require at least version ?? of the
+**NB**: These instructions require at least version 2013.2-9 of the
 `openstack-neutron` package.  If you have an older version of this
 package, see these [extended upgrade instructions][q-to-n].
 

@@ -8,9 +8,7 @@ On your Quantum network hosts and compute nodes:
 
 On your Neutron network host:
 
-    neutron-db-manage \
-      --config-file /etc/neutron/neutron.conf \
-      --config-file /etc/neutron/plugin.ini upgrade head
+    openstack-db --service neutron --update
 
 On your Neutron network host and compute nodes:
 

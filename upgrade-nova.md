@@ -7,7 +7,7 @@ On all hosts running Nova services:
 
 On your Nova API host:
 
-    nova-manage db sync
+    openstack-db --service nova --update
 
 On all your hosts running Nova services:
 

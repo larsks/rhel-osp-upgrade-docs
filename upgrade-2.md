@@ -15,7 +15,7 @@ something like:
 
 1. Update the database schema for that service:
 
-         # <service>-manage db_sync
+         # openstack-db --service <service> --update
 
      See the [Database Upgrades][dbsync] document for the specific
      command used by each individual service to perform the database

@@ -4,6 +4,6 @@ On your Keystone server:
 
     openstack-service stop keystone
     yum -d1 -y upgrade \*keystone\*
-    keystone-manage db_sync
+    openstack-db --service keystone --update
     openstack-service start keystone
 
