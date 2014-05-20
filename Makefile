@@ -1,9 +1,8 @@
-MARKDOWN = markdown_py 
+MARKDOWN = marked
 
 MDDOCS= \
 	database-upgrades.md \
 	overview.md \
-	quantum-to-neutron.md \
 	service.md \
 	upgrade-1.md \
 	upgrade-2.md \
@@ -13,9 +12,12 @@ MDDOCS= \
 	upgrade-horizon.md \
 	upgrade-keystone.md \
 	upgrade-nova.md \
-	upgrade-quantum.md \
+	upgrade-neutron.md \
 	upgrade-swift.md \
-	parallel-nova.md
+	parallel-nova.md \
+	upgrade-config.md \
+	upgrade-4.md \
+	neutron-nova-notifications.md
 
 HTMLDOCS= $(MDDOCS:.md=.html)
 

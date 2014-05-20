@@ -43,8 +43,8 @@ which to perform the upgrade:
 1. [Swift][]
 1. [Cinder][]
 1. [Glance][]
-1. [Quantum/Neutron][quantum] (only if you are using Quantum
-   networking in your Grizzly environment)
+1. [Neutron][] (only if you are using Neutron
+   networking in your Havana environment)
 1. [Horizon][]
 1. [Nova][]
 
@@ -57,7 +57,7 @@ upgraded package.
 [swift]: upgrade-swift.html
 [cinder]: upgrade-cinder.html
 [glance]: upgrade-glance.html
-[quantum]: upgrade-quantum.html
+[neutron]: upgrade-neutron.html
 [nova]: upgrade-nova.html
 [horizon]: upgrade-horizon.html
 
