@@ -39,7 +39,7 @@ Read about this scenario in [Upgrade Scenario 2][2].
 ## Scenario 3: Service-by-service with parallel compute
 
 For most services this scenario is identical to scenario 2, with the
-exception of the Nova APIs and compute services.  Rather than
+exception of the Nova controller and compute services.  Rather than
 upgrading your existing Nova environment as part of this process, you
 deploy new nodes running the Havana Nova services.  You wait for
 existing workloads on your Grizzly compute nodes to complete (or
@@ -55,7 +55,26 @@ Havana Nova nodes.
 
 Read about this scenario in [Upgrade Scenario 3][3].
 
+## Scenario 4: Service-by-service with live compute upgrade
+
+For most services this scenario is identical to scenario 2, with the
+exception of the Nova controller and compute services. In this scenario, you
+will upgrade the Nova controller services to the Icehouse release and
+configure them to support an RPC API version that is compatible with
+your existing Havana compute nodes.  This permits you to upgrade your
+compute nodes one at a time without little or no downtime.
+
+**Pros**: Like scenario 3, this process minimizes the downtime to your
+existing compute workloads, but does not require a parallel
+environment to support the process.
+
+**Cons**: The features that support this live upgrade process are very
+new and may not be as well tested as other aspects of OpenStack.
+
+Read about this scenario in [Upgrade Scenario 4][4].
+
 [1]: upgrade-1.html
 [2]: upgrade-2.html
 [3]: upgrade-3.html
+[4]: upgrade-4.html
 

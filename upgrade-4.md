@@ -10,8 +10,10 @@ compute nodes in parallel with Icehouse compute nodes.
 1. Follow the procedure for [scenario 2][s2], but stop after completing
    the Horizon upgrade (do not upgrade Nova).
 
-   You will want to run the final `yum upgrade` on systems that are
+   You will want to run the [final package upgrade][final] on systems that are
    not running Nova services.
+
+   [final]: final-package-upgrade.html
 
 1. Upgrade the Nova controller services.  On each controller node,
    stop the running Nova services:
@@ -21,6 +23,11 @@ compute nodes in parallel with Icehouse compute nodes.
    and upgrade the Nova packages:
 
        yum -y upgrade \*nova\*
+
+   Note the *Configuration changes* section of the [Nova upgade
+   documentation][nova-upgrade].
+
+   [nova-upgrade]: upgrade-nova.html
 
    At this point, you will want to examine any `*.rpmnew` files
    installed by the packages and update your existing configuration
@@ -131,4 +138,8 @@ You will need to restart Nova services on each host where you make
 this change:
 
     openstack-service restart nova
+
+At this point, you should perform a [final package upgrade][final] on
+your compute and controller nodes to ensure that all your installed
+packages are at the latest version.
 

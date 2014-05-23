@@ -11,8 +11,10 @@ upgrade the computer service on that node.
 1. Follow the procedure for [scenario 2][s2], but stop after completing
    the Horizon upgrade (do not upgrade Nova).
 
-   You will want to run the final `yum upgrade` on systems that are
+   You will want to run the [final package upgrade][final] on systems that are
    not running Nova services.
+
+   [final]: final-package-upgrade.html
 
 ## Deploy the new compute environment
 
