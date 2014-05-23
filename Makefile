@@ -15,7 +15,6 @@ MDDOCS= \
 	upgrade-neutron.md \
 	upgrade-swift.md \
 	parallel-nova.md \
-	upgrade-config.md \
 	upgrade-4.md \
 	neutron-nova-notifications.md
 
