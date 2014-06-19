@@ -1,4 +1,4 @@
-# Upgrading from Grizzly to Havana: Overview
+# Upgrading from Havana to Icehouse: Overview
 
 Note that the following holds true for all of the following scenarios:
 
@@ -42,8 +42,8 @@ For most services this scenario is identical to scenario 2, with the
 exception of the Nova controller and compute services.  Rather than
 upgrading your existing Nova environment as part of this process, you
 deploy new nodes running the Havana Nova services.  You wait for
-existing workloads on your Grizzly compute nodes to complete (or
-migrate them by hand), and when a Grizzly compute node is no longer
+existing workloads on your Havana compute nodes to complete (or
+migrate them by hand), and when a Havana compute node is no longer
 hosting any instances you upgrade the compute service on that node.
 
 **Pros**: This minimizes interruptions to your compute service.
@@ -51,7 +51,7 @@ Existing workloads can run indefinitely, and you do not need to wait
 for a database migration.
 
 **Cons**: This requires additional hardware resources to bring up the
-Havana Nova nodes.
+Icehouse Nova nodes.
 
 Read about this scenario in [Upgrade Scenario 3][3].
 

@@ -3,9 +3,9 @@
 For most services this scenario is identical to scenario 2, with the
 exception of the compute service.  Rather than upgrading your existing
 compute nodes as part of this process, you deploy new compute nodes
-running the Havana compute service.  You wait for existing workloads
-on your Grizzly compute nodes to complete (or migrate them by hand),
-and when a Grizzly compute node is no longer hosting any instances you
+running the Icehouse compute service.  You wait for existing workloads
+on your Havana compute nodes to complete (or migrate them by hand),
+and when a Havana compute node is no longer hosting any instances you
 upgrade the computer service on that node.
 
 1. Follow the procedure for [scenario 2][s2], but stop after completing
@@ -18,29 +18,29 @@ upgrade the computer service on that node.
 
 ## Deploy the new compute environment
 
-1. [Set up a parallel compute environment][parallel]: install a new Nova controller  and compute nodes using the Havana repositories.
+1. [Set up a parallel compute environment][parallel]: install a new Nova controller  and compute nodes using the Icehouse repositories.
 
      These systems will use a configuration generally identical to that
-     on your Grizzly Nova nodes.  They will be making use of the
+     on your Havana Nova nodes.  They will be making use of the
      same Keystone, Glance, Cinder, etc. services.
 
 [parallel]: parallel-nova.html
 
 ## Move instances to the new environment
 
-1. Migrate instances to the Havana compute nodes
+1. Migrate instances to the Icehouse compute nodes
 
      The simplest method for "migrating" an instance is to simply
-     stop the instance running in your Grizzly environment and deploy
-     a new one on the Havana infrastructure.
+     stop the instance running in your Havana environment and deploy
+     a new one on the Icehouse infrastructure.
 
      If re-deployment is not an option, you can move instances from
-     your Grizzly compute nodes to your Havana compute nodes with
+     your Havana compute nodes to your Icehouse compute nodes with
      minimal downtime via the following process:
      
      1. Snapshot the existing instance.
      1. Delete the existing instance.
-     1. Boot a new instance on the Havana compute nodes from the
+     1. Boot a new instance on the Icehouse compute nodes from the
         snapshot.
      1. Allocate and assign any necessary floating addresses
 
@@ -49,7 +49,7 @@ upgrade the computer service on that node.
           to which they were assigned is shut down.
 
           In a Nova networking environment, you will need to create
-          new floating ip pools identical to those in your Grizzly
+          new floating ip pools identical to those in your Havana
           environment and then explicitly allocate the necessary
           floating ip addresses before assigning them.
 
@@ -57,11 +57,11 @@ upgrade the computer service on that node.
           allocate explicit addresses.
 
 1. When you are able to move all the instances from one of your
-   existing Grizzly compute nodes, you can redeploy that node in your
-   Havana compute environment.
+   existing Havana compute nodes, you can redeploy that node in your
+   Icehouse compute environment.
 
-1. When you have moved all your compute nodes into the Havana
-   environment, you can retire any remaining Grizzly Nova services.
+1. When you have moved all your compute nodes into the Icehouse
+   environment, you can retire any remaining Havana Nova services.
 
 [s2]: upgrade-2.html
 

@@ -1,9 +1,9 @@
 # Upgrading Keystone
 
-Because Keystone in Grizzly never purged expired tokens it is possible
-that your token table has a large number of expired entries.  This can
-dramatically increase the time it takes to complete the database
-schema upgrade.
+Because earlier releases of Keystone never purged expired tokens it is
+possible that your token table has a large number of expired entries.
+This can dramatically increase the time it takes to complete the
+database schema upgrade.
 
 You can alleviate this problem by running the following command before
 beginning the Keystone database upgrade process:

@@ -6,7 +6,7 @@ upgrade process is complete.
 
 On all of your hosts:
 
-1. Install the Havana yum repository.
+1. Install the Icehouse yum repository.
 
 1. [Stop all your OpenStack services][stop].
 
@@ -19,12 +19,13 @@ On all of your hosts:
 1. Review newly installed configuration files.
 
      The upgraded packages will have installed `.rpmnew` files
-     appropriate to the Havana version of the service.  In general,
-     the Havana services will run using the configuration files from
-     your Grizzly deployment.  The following services will need manual
+     appropriate to the Icehouse version of the service.  In general,
+     the Icehouse services will run using the configuration files from
+     your Havana deployment.  The following services will need manual
      configuration before they will work correctly:
 
      - [Horizon][]
+     - [Neutron][]
 
 1. [Start all your OpenStack services][start].
 
@@ -32,4 +33,5 @@ On all of your hosts:
 [start]: service.html#start
 [dbsync]: database-upgrades.html
 [horizon]: upgrade-horizon.html
+[neutron]: upgrade-neutron.html
 
