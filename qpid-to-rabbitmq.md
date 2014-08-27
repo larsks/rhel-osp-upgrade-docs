@@ -57,8 +57,7 @@ service at a time without disrupting your entire environment.
          service rabbitmq-server start
          chkconfig rabbitmq-server on
 
-1. For each service, shut down the service on all the hosts in your
-   OpenStack deployment, modify the appropriate configuration files as
+1. For each service, modify the appropriate configuration files as
    per [this document](https://access.redhat.com/articles/1167113),
    and then restart the service.
 
@@ -70,24 +69,16 @@ service at a time without disrupting your entire environment.
      For example, to migrate your Nova services from `qpid` to
      `rabbitmq`:
 
-     1. Shut down nova on the controller:
-
-              controller# openstack-service stop nova
-
-     1. Shut down nova on the compute hosts:
-
-              compute# openstack-service stop nova
-
      1. Edit `/etc/nova/nova.conf` on both the controller and compute
           hosts.
 
      1. Restart Nova services on the controller and compute hosts:
 
-              controller# openstack-service start nova
+              controller# openstack-service restart nova
 
           And:
           
-              compute# openstack-service start nova
+              compute# openstack-service restart nova
 
 1. After completing the configuration changes for all of your
    services, stop and disable the `qpid` service on your controller:
