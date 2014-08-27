@@ -89,3 +89,23 @@ service at a time without disrupting your entire environment.
 At this point, all of your services are now talking to `rabbitmq` on
 port 5673.
 
+You can verify that you have completed the migration by using the
+`netstat` or `ss` command to look for `ESTABLISHED` connections to
+port 5672.  E.g:
+
+    # netstat -tan | grep 5672 | grep ESTABLISHED
+
+After completing the above steps, there should be no output from this
+command.  All of your services should now be using port 5673:
+
+    # netstat -tan | grep 5673 | grep ESTABLISHED
+
+Which will generate output like:
+
+    tcp        0      0 127.0.0.1:37110         127.0.0.1:5673          ESTABLISHED
+    tcp        0      0 127.0.0.1:37108         127.0.0.1:5673          ESTABLISHED
+    tcp        0      0 192.168.122.162:54024   192.168.122.162:5673    ESTABLISHED
+    tcp        0      0 127.0.0.1:37100         127.0.0.1:5673          ESTABLISHED
+    tcp        0      0 192.168.122.162:54595   192.168.122.162:5673    ESTABLISHED
+    tcp        0      0 127.0.0.1:37109         127.0.0.1:5673          ESTABLISHED
+
