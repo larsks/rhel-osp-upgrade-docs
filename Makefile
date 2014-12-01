@@ -17,7 +17,8 @@ MDDOCS= \
 	final-package-upgrade.md \
 	parallel-nova.md \
 	upgrade-4.md \
-	neutron-nova-notifications.md
+	neutron-nova-notifications.md \
+	qpid-to-rabbitmq.md
 
 HTMLDOCS= $(MDDOCS:.md=.html)
 
@@ -30,7 +31,7 @@ HTMLDOCS= $(MDDOCS:.md=.html)
 %.html: %.2.html
 	title="$(shell xmllint --xpath '//h1/text()' $<)"; \
 	( \
-		sed "s/TITLE/$$title/g" head; \
+		sed "s|TITLE|$$title|g" head; \
 		cat $<; \
 		cat foot; \
 	) > $@
