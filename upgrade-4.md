@@ -7,15 +7,14 @@ service from Icehouse can talk to a Juno control plane.
 
 ## Upgrade Nova controllers
 
+[s2]: upgrade-2.html
+[final]: final-package-upgrade.html
+
 1. Follow the procedure for [scenario 2][s2], but stop after completing
    the Horizon upgrade (do not upgrade Nova).
 
-    [s2]: upgrade-2.html
-
-    You will want to run the [final package upgrade][final] on systems that are
-    not running Nova services.
-
-    [final]: final-package-upgrade.html
+      You will want to run the [final package upgrade][final] on
+      systems that are not running Nova services.
 
 1. Upgrade the Nova controller services.  On each controller node,
    stop the running Nova services:
