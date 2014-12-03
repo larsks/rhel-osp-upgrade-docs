@@ -3,12 +3,11 @@
 ## The openstack-service command
 
 These instructions make use of the `openstack-service` command,
-available from the `openstack-utils` package in RDO Havana (and RHOS 4).  After install the appropriate repositories, you can upgrade to the latest version by running:
+available from the `openstack-utils` package.  After configuring the
+appropriate repositories, you can upgrade to the latest version by
+running:
 
     # yum install openstack-utils
-
-<!-- You'll need at least version ?? of this package in order for the
-`openstack-service` command to be available. -->
 
 ## <a name="stop">Stopping services</a>
 

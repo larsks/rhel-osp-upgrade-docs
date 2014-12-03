@@ -1,7 +1,7 @@
 ## Final package upgrade
 
-After completing all of your service upgrades, you must perform a
-complete package upgrade on all of your systems:
+After completing all of your individual service upgrades, you must
+perform a complete package upgrade on all of your systems:
 
     # yum upgrade
 
@@ -15,6 +15,6 @@ service, which otherwise will encounter errors due to the upgrade of
 the Glance client package.
 
 If this results in a new kernel being installed on your systems you
-will probably want to schedule a reboot at some point in the future in
-order to activate the kernel.
+will need to schedule a reboot at some point in the future in order to
+activate the kernel.
 

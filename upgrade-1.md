@@ -6,7 +6,7 @@ upgrade process is complete.
 
 On all of your hosts:
 
-1. Install the Icehouse yum repository.
+1. Install the Juno yum repository.
 
 1. [Stop all your OpenStack services][stop].
 
@@ -19,13 +19,10 @@ On all of your hosts:
 1. Review newly installed configuration files.
 
      The upgraded packages will have installed `.rpmnew` files
-     appropriate to the Icehouse version of the service.  In general,
-     the Icehouse services will run using the configuration files from
-     your Havana deployment.  The following services will need manual
-     configuration before they will work correctly:
-
-     - [Horizon][]
-     - [Neutron][]
+     appropriate to the Juno version of the service.  In general,
+     the Juno services will run using the configuration files from
+     your Icehouse deployment, but you will want to review the
+     `.rpmnew` files for any required changes.
 
 1. [Start all your OpenStack services][start].
 

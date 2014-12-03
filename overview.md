@@ -1,4 +1,4 @@
-# Upgrading from Havana to Icehouse: Overview
+# Upgrading from Icehouse to Juno: Overview
 
 Note that the following holds true for all of the following scenarios:
 
@@ -41,9 +41,9 @@ Read about this scenario in [Upgrade Scenario 2][2].
 For most services this scenario is identical to scenario 2, with the
 exception of the Nova controller and compute services.  Rather than
 upgrading your existing Nova environment as part of this process, you
-deploy new nodes running the Havana Nova services.  You wait for
-existing workloads on your Havana compute nodes to complete (or
-migrate them by hand), and when a Havana compute node is no longer
+deploy new nodes running the Juno Nova services.  You wait for
+existing workloads on your Icehouse compute nodes to complete (or
+migrate them by hand), and when an Icehouse compute node is no longer
 hosting any instances you upgrade the compute service on that node.
 
 **Pros**: This minimizes interruptions to your compute service.
@@ -58,18 +58,14 @@ Read about this scenario in [Upgrade Scenario 3][3].
 ## Scenario 4: Service-by-service with live compute upgrade
 
 For most services this scenario is identical to scenario 2, with the
-exception of the Nova controller and compute services. In this scenario, you
-will upgrade the Nova controller services to the Icehouse release and
-configure them to support an RPC API version that is compatible with
-your existing Havana compute nodes.  This permits you to upgrade your
-compute nodes one at a time without little or no downtime.
+exception of the Nova controller and compute services.  In this
+scenario, you will take advantage of the fact that Icehouse `nova-compute` can communicate with Juno control services in order to perform a rolling upgrade of compute services across your environment.
 
-**Pros**: Like scenario 3, this process minimizes the downtime to your
-existing compute workloads, but does not require a parallel
-environment to support the process.
+Like scenario 3, this process minimizes the downtime to your existing
+compute workloads, but does not require a parallel environment to
+support the process.
 
-**Cons**: The features that support this live upgrade process are very
-new and may not be as well tested as other aspects of OpenStack.
+This is our recommended upgrade procedure for most environments.
 
 Read about this scenario in [Upgrade Scenario 4][4].
 

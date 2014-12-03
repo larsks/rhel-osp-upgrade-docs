@@ -1,5 +1,8 @@
 # Upgrading Keystone
 
+<!-- TODO: does rhel-osp 5 keystone package run token_flush via cron
+by default? -->
+
 Because earlier releases of Keystone never purged expired tokens it is
 possible that your token table has a large number of expired entries.
 This can dramatically increase the time it takes to complete the

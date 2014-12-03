@@ -2,54 +2,49 @@
 
 For most services this scenario is identical to scenario 2, with the
 exception of the compute service.  This scenario takes advantage of
-work done for the Icehouse release that permits you to run Havana
-compute nodes in parallel with Icehouse compute nodes.
+the fact that, with appropriate configuration, a `nova-compute`
+service from Icehouse can talk to a Juno control plane.
 
 ## Upgrade Nova controllers
 
 1. Follow the procedure for [scenario 2][s2], but stop after completing
    the Horizon upgrade (do not upgrade Nova).
 
-   You will want to run the [final package upgrade][final] on systems that are
-   not running Nova services.
+    [s2]: upgrade-2.html
 
-   [final]: final-package-upgrade.html
+    You will want to run the [final package upgrade][final] on systems that are
+    not running Nova services.
+
+    [final]: final-package-upgrade.html
 
 1. Upgrade the Nova controller services.  On each controller node,
    stop the running Nova services:
 
-       openstack-service stop nova
+         openstack-service stop nova
 
-   and upgrade the Nova packages:
+     and upgrade the Nova packages:
 
-       yum -y upgrade \*nova\*
+         yum -y upgrade \*nova\*
 
-   Note the *Configuration changes* section of the [Nova upgade
-   documentation][nova-upgrade].
-
-   [nova-upgrade]: upgrade-nova.html
-
-   At this point, you will want to examine any `*.rpmnew` files
-   installed by the packages and update your existing configuration
-   files appropriately.
+     At this point, you will want to examine any `*.rpmnew` files
+     installed by the packages and update your existing configuration
+     files appropriately.
 
 1. On one of the controller nodes, run the database upgrade script:
 
-       openstack-db --service nova --update
+         openstack-db --service nova --update
 
-1. Cap the compute RPC API at a version that will still be understood
-   by your Havana compute nodes.  Look for the `[upgrade_levels]`
-   section in `/etc/nova/nova.conf` and set the `compute` option like
-   this:
+1. On all the controller nodes, cap the compute RPC API at a version
+   that will still be understood by your Icehouse compute nodes.  Look
+   for the `[upgrade_levels]` section in `/etc/nova/nova.conf` and set
+   the `compute` option like this:
 
-       [upgrade_levels]
-       compute = icehouse-compat
+         [upgrade_levels]
+         compute = icehouse
 
 1. Restart the controller services.  On each controller node:
 
-       openstack-service start nova
-
-[s2]: upgrade-2.html
+         openstack-service start nova
 
 ## Upgrade Neutron
 
@@ -60,8 +55,8 @@ instructions][].
 
 ## Upgrade Nova compute nodes
 
-At this point, your controller nodes are all running the Icehouse
-version of Nova and your compute nodes are still running the Havana
+At this point, your controller nodes are all running the Juno
+version of Nova and your compute nodes are still running the Icehouse
 version.
 
 For each compute node:
@@ -69,29 +64,29 @@ For each compute node:
 1. Mark the `nova-compute` service as disabled to prevent Nova from
    scheduling any new servers on this node:
 
-       nova service-disable --reason upgrade myhost nova-compute
+         nova service-disable --reason upgrade myhost nova-compute
 
-   Where `myhost` is the name of the compute host as it is known to
-   Nova.  You can see a list of compute hosts using the `nova
-   service-list` command:
+     Where `myhost` is the name of the compute host as it is known to
+     Nova.  You can see a list of compute hosts using the `nova
+     service-list` command:
 
-       nova service-list --binary nova-compute
+         nova service-list --binary nova-compute
 
 1. Stop the `nova-compute` service on the node:
 
-       openstack-service stop nova
+         openstack-service stop nova
 
 1. Upgrade all the Nova packages:
 
-       yum upgrade \*nova\*
+         yum upgrade \*nova\*
 
 1. Restart Nova services:
 
-       openstack-service start nova
+         openstack-service start nova
 
 1. Re-enable the compute service:
 
-       nova service-enable myhost nova-compute
+         nova service-enable myhost nova-compute
 
 ## Migrating instances
 
@@ -99,12 +94,12 @@ If you need to perform hardware or operating system upgrades on the
 compute nodes, you can migrate running instances off the nodes as part
 of the upgrade process.
 
-If you will be migrating instances between Havana and Icehouse compute
-nodes, you will need to ensure that your Icehouse nodes have the same
+If you will be migrating instances between Icehouse and Juno compute
+nodes, you will need to ensure that your Juno nodes have the same
 `upgrade_levels` setting as your controllers:
 
        [upgrade_levels]
-       compute = icehouse-compat
+       compute = icehouse
 
 ### Live migration
 
@@ -132,7 +127,7 @@ compute nodes, comment out the `compute` setting in the
 `upgrade_levels` section:
 
        [upgrade_levels]
-       # compute = icehouse-compat
+       # compute = icehouse
 
 You will need to restart Nova services on each host where you make
 this change:

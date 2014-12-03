@@ -27,12 +27,13 @@ something like:
 
 [stop]: service.html#stop
 [start]: service.html#start
+[dbsync]: database-upgrades.html
 
 ## Pre-upgrade
 
 On all of your hosts:
 
-1. Install the Havana yum repository.
+1. Install the Juno yum repository.
 
 ## Service upgrades
 
@@ -44,7 +45,7 @@ which to perform the upgrade:
 1. [Cinder][]
 1. [Glance][]
 1. [Neutron][] (only if you are using Neutron
-   networking in your Havana environment)
+   networking in your OpenStack environment)
 1. [Horizon][]
 1. [Nova][]
 
@@ -63,8 +64,8 @@ upgraded package.
 
 # Post-upgrade
 
-You will want to perform a [final package upgrade][final] to ensure
-that all your installed packages are at the latest version.
+Perform a [final package upgrade][final] to ensure that all of your
+installed packages are at the latest version.
 
 [final]: final-package-upgrade.html
 

@@ -42,17 +42,11 @@ On the Nova API host, run:
 
     # nova-manage db sync
 
-## Quantum/Neutron
+## Neutron
 
 On the Neutron host, run:
 
     # neutron-db-manage \
       --config-file /etc/neutron/neutron.conf \
       --config-file /etc/neutron/plugin.ini upgrade head
-
-**NB**: These instructions require at least version 2013.2-9 of the
-`openstack-neutron` package.  If you have an older version of this
-package, see these [extended upgrade instructions][q-to-n].
-
-[q-to-n]: quantum-to-neutron.html
 
