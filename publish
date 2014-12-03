@@ -4,5 +4,5 @@ rm -f index.html
 ln -s overview.html index.html
 make
 rsync -a --delete --exclude=.git/ . \
-	people.redhat.com:public_html/rhos5-upgrade-docs/
+	people.redhat.com:public_html/rhos6-upgrade-docs/
 
