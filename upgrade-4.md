@@ -45,13 +45,6 @@ service from Icehouse can talk to a Juno control plane.
 
          openstack-service start nova
 
-## Upgrade Neutron
-
-If you are running Neutron, follow the [Neutron upgrade
-instructions][].
-
-[neutron upgrade instructions]: upgrade-neutron.html
-
 ## Upgrade Nova compute nodes
 
 At this point, your controller nodes are all running the Juno
