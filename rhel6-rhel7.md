@@ -363,7 +363,7 @@ that the agent on your compute node is reporting correctly.
 
 Install the `openstack-nova-compute` package:
 
-   # yum -y install openstack-nova-compute
+    # yum -y install openstack-nova-compute
 
 Edit `nova.conf` to cap the compute API at an icehouse compatible
 version:
