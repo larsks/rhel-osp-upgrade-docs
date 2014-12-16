@@ -18,7 +18,8 @@ MDDOCS= \
 	parallel-nova.md \
 	upgrade-4.md \
 	neutron-nova-notifications.md \
-	qpid-to-rabbitmq.md
+	qpid-to-rabbitmq.md \
+	rhel6-rhel7.md
 
 HTMLDOCS= $(MDDOCS:.md=.html)
 
