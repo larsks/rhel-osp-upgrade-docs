@@ -280,6 +280,27 @@ Verify that your Nova services have started correctly:
 You should see both the services on your controller as well as the
 `nova-compute` services running on your compute nodes.
 
+### Install Horizon
+
+Install the `openstack-dashboard` package:
+
+    # yum -y install openstack-dashboard
+
+Copy the Horizon configuration files from your RHEL6 controller to
+`/etc/openstack-dashboard' on your RHEL7 controller.
+
+Until [BZ 1174977][] is resolved, you will also need to enable the
+`httpd_can_network_connect` selinux boolean:
+
+[BZ 1174977]: https://bugzilla.redhat.com/show_bug.cgi?id=1174977
+
+    # setsebool httpd_can_network_connect=true
+
+Activate the Apache service:
+
+    # systemctl enable httpd
+    # systemctl start httpd
+
 At this point, you should have a fully operational OpenStack
 environment running Juno on your controller and Icehouse on your
 compute nodes.
