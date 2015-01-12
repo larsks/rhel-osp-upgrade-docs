@@ -10,23 +10,43 @@ so you will need to completely reinstall all of the components in your
 OpenStack environment.  This document suggests one possible strategy
 for approaching this ugprade process.
 
-## Prerequisites
+## Requirements
 
-These instructions assume that are rebuilding your RHEL6 hosts into
-RHEL7 hosts.  In particular, they assume that your RHEL7 hosts will
-have the same ip addresses and hostnames of the hosts that they are
-replacing.
+### Application data
 
-**NB** Be absolutely sure the system hostname (as returned by the
-`hostname` command) is identical.  Some OpenStack services (in
-particular Cinder and Neutron) identify agents by hostname, and a
-hostname mismatch during this upgrade process can cause unexpected
-failures.
+All OpenStack application data (MySQL database storage, cinder
+volumes, glance images) must not be stored on your root filesystem.
+That is, it must be stored either on dedicated local devices or on
+filesystems/volumes provided by a remote server.
 
-Any data that needs to survive the upgrade process (such as your
-database backing store, OpenStack service state data in
-`/var/lib/nova`, `/var/lib/glance`, etc) must be stored somewhere
-other than on your root filesystem.
+You must ensure that this data is not erased or overwritten as part of
+the RHEL 7 installation.
+
+### Configuration files
+
+Ensure that you have complete backups of your OpenStack configuration
+files.  This includes everything in `/etc`, as well as any stored
+credentials (for Keystone, MySQL, etc) located in `/root` or other
+local user home directories.
+
+### Hostnames and addresses
+
+In order to simplify the ugprade process, these instructions require
+that your configure your new RHEL 7 hosts at the same ip address and
+hostname as the RHEL 6 hosts you are replacing.  You have a few
+options for doing this:
+
+- You can give you RHEL 6 hosts a new IP address so that the original
+  address is available for your replacement RHEL 7 hosts.  This
+  ensures that you will continue to have any access to configuration
+  files and other data hosted on your existing controllers, but it
+  does require that you have the additional hardware available to set
+  up new hosts while preserving your old ones.
+
+- You can perform the RHEL 7 installation on your RHEL 6 hosts.  While
+  this does not require additional hardware, you will need to ensure
+  that you have backups of all your configuration files and other
+  data.
 
 ### If you are using the Cinder LVM backend
 
@@ -75,13 +95,20 @@ your Cinder volumes:
 ### Mount or restore your application data
 
 Restore at least `/var/lib/mysql`, `/var/lib/glance`, and
-`/var/lib/nova` from your Icehouse environment.
+`/var/lib/nova` from your Icehouse environment, either by re-mounting
+the appropriate devices or attaching to the appropriate remote
+fileserver.
+
+You will need to update `/etc/fstab` to ensure that this configuration
+persists after a reboot.
 
 ### Restore your iptables rules
 
 Ensure that any local firewall configuration that was defined on your
-RHEL6 controllers is imported into your RHEL7 controllers.  You will
-need to install the `iptables-services` package:
+RHEL6 controllers is imported into your RHEL7 controllers by copying
+your RHEL 6 `/etc/sysconfig/iptables` into `/etc/sysconfig/iptables`
+on your RHEL 7 host.  You will need to install the `iptables-services`
+package:
 
     # yum -y install iptables-services
 
