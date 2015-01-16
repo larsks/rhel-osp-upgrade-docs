@@ -232,8 +232,8 @@ Ensure correct ownership on the Glance log and data directories:
 
 Start glance:
 
-    # systemctl enable glance-{api,registry}
-    # systemctl start glance-{api,registry}
+    # systemctl enable openstack-glance-{api,registry}
+    # systemctl start openstack-glance-{api,registry}
 
 Verify that Glance is operating correctly:
 
