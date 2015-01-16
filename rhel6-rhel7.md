@@ -22,6 +22,15 @@ filesystems/volumes provided by a remote server.
 You must ensure that this data is not erased or overwritten as part of
 the RHEL 7 installation.
 
+If the data cannot be preserved across the upgrade, make sure to back
+it up first.  A simple solution is to mount an NFS share from another
+system and copy the appropriate directories:
+
+    # mkdir -p $BACKUP/var/lib/{glance,nova,mysql}/
+    # rsync -a /var/lib/mysql/ $BACKUP/var/lib/mysql/
+    # rsync -a /var/lib/glance/ $BACKUP/var/lib/glance/
+    # rsync -a /var/lib/nova/ $BACKUP/var/lib/nova/
+
 ### Configuration files
 
 Ensure that you have complete backups of your OpenStack configuration
@@ -87,20 +96,22 @@ suybsystem:
     # systemctl enable target
     # systemctl start target
 
-You will also want to activate the LVM volume groups that container
+You will also want to activate the LVM volume groups that contain
 your Cinder volumes:
 
     # vgchange -ay
 
-### Mount or restore your application data
+### Restore your network configuraiton
 
-Restore at least `/var/lib/mysql`, `/var/lib/glance`, and
-`/var/lib/nova` from your Icehouse environment, either by re-mounting
-the appropriate devices or attaching to the appropriate remote
-fileserver.
+Ensure that you restore the `/etc/sysconfig/network-scripts` files
+required by your Neutron configuration, such as `ifcfg-br-ex`:
 
-You will need to update `/etc/fstab` to ensure that this configuration
-persists after a reboot.
+    # cp $BACKUP/etc/sysconfig/network-scripts/ifcfg-br-ex \
+      /etc/sysconfig/network-scripts/ifcfg-br-ex
+
+And ensure that these interfaces are up:
+
+    # ifup br-ex
 
 ### Restore your iptables rules
 
@@ -108,9 +119,17 @@ Ensure that any local firewall configuration that was defined on your
 RHEL6 controllers is imported into your RHEL7 controllers by copying
 your RHEL 6 `/etc/sysconfig/iptables` into `/etc/sysconfig/iptables`
 on your RHEL 7 host.  You will need to install the `iptables-services`
-package:
+package if it is not already installed:
 
     # yum -y install iptables-services
+
+Make sure iptables is stopped:
+
+    # systemctl stop iptables
+
+Restore your iptables configuration from backups:
+
+    # cp $BACKUP/etc/sysconfig/iptables /etc/sysconfig/iptables
 
 And activate the iptables service:
 
@@ -124,9 +143,13 @@ Install the `rabbitmq-server` package:
     # yum -y install rabbitmq-server
 
 Migrate any `rabbitmq` configuration files from your RHEL6 controllers
-into `/etc/rabbitmq` on your RHEL7 controller, and then activate the
-`rabbitmq-server` service:
+into `/etc/rabbitmq` on your RHEL7 controller:
 
+    # rsync -a $BACKUP/etc/rabbitmq/ /etc/rabbitmq
+
+And activate the `rabbitmq-server` service:
+
+    # systemctl enable rabbitmq-server
     # systemctl start rabbitmq-server
 
 ### Install mariadb-server
@@ -135,9 +158,20 @@ Install the `mariadb-server` package:
 
     # yum -y install mariadb-server
 
+Either re-mount your `/var/lib/mysql` directory (and modify
+`/etc/fstab` appropriately), or restore the contents of
+`/var/lib/mysql` from your backups:
+
+    # rsync -a $BACKUP/var/lib/mysql/ /var/lib/mysql/
+
+Restore `/root/.my.conf` from your backups, if it exists:
+
+    # cp $BACKUP/root/.my.cnf /root/.my.cnf
+
 Ensure correct ownership of files in /var/lib/mysql:
 
     # chown -R mysql:mysql /var/lib/mysql
+    # fixfiles restore /var/lib/mysql/
 
 And activate the `mariadb` service:
 
@@ -149,9 +183,18 @@ Perform any necessary database updates:
     # mysql_upgrade
 
 Verify that you are able to connect to the database server with the
-`mysql` command line client.  If your RHEL6 controller has a
-`/root/.my.conf` file, copy it to your RHEL7 system, otherwise,
-manually enter your datbase admin password.
+`mysql` command line client; a successful connection looks like this:
+
+    # mysql
+    Welcome to the MariaDB monitor.  Commands end with ; or \g.
+    Your MariaDB connection id is 419
+    Server version: 5.5.40-MariaDB MariaDB Server
+
+    Copyright (c) 2000, 2014, Oracle, Monty Program Ab and others.
+
+    Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+    MariaDB [(none)]> 
 
 ### Install Keystone
 
@@ -160,15 +203,13 @@ Install the `openstack-keystone` package:
     # yum -y install openstack-keystone
 
 Copy the Keystone configuration files from your RHEL6 controller into
-`/etc/keystone` on your RHEL7 controller.
+`/etc/keystone` on your RHEL7 controller:
+
+    # rsync -a $BACKUP/etc/keystone/ /etc/keystone/
 
 Upgrade the Keystone database schema:
 
     # sudo -u keystone keystone-manage db_sync
-
-Ensure proper ownership on the Keystone log files:
-
-    # chown -R keystone:keystone /var/log/keystone
 
 Activate the Keystone service:
 
@@ -178,10 +219,11 @@ Activate the Keystone service:
 Load your Keystone administrative credentials and verify that Keystone
 is operating correctly:
 
+    # . /root/keystonerc_admin
     # keystone endpoint-list
 
-(The remaining steps assume that your Keystone credentials have
-been loaded into your environment.)
+**NB**: The remaining instructions assume that you have your keystone
+credentials available in your environment.
 
 ### Install Cinder
 
@@ -190,18 +232,19 @@ Install the `openstack-cinder` package:
     # yum -y install openstack-cinder
 
 Copy the Cinder configuration files from your RHEL6 controller into
-`/etc/cinder` on your RHEL7 controller.  You will need to make the
-following changes if you are using the LVM backend:
+`/etc/cinder` on your RHEL7 controller:
+
+    # rsync -a $BACKUP/etc/cinder/ /etc/cinder/
+
+If you are using the LVM backend, you will need to update
+`cinder.conf` to use the new LIO driver.  Edit
+`/etc/cinder/cinder.conf` and make the following changes:
 
 - Set `iscsi_helper=lioadm` in the `DEFAULT` section.
 
 Upgrade the Cinder database schema:
 
     # sudo -u cinder cinder-manage db sync
-
-Ensure correct ownership of the Cinder log directory:
-
-    # chown -R cinder:cinder /var/log/cinder
 
 Activate the Cinder services:
 
@@ -217,23 +260,26 @@ volumes are available:
 
 Install the `openstack-glance` package:
 
-    # yum -y install `openstack-glance`
+    # yum -y install openstack-glance
 
 Copy the Glance configuration files from your RHEL6 controller into
-`/etc/glance` on your RHEL7 controller.
+`/etc/glance` on your RHEL7 controller:
+
+    # rsync -a $BACKUP/etc/glance/ /etc/glance/
 
 Upgrade the Glance database schema:
 
     # sudo -u glance glance-manage db sync
 
-Ensure correct ownership on the Glance log and data directories:
+Ensure correct ownership on the Glance data directory:
 
-    # chown -R glance:glance /var/log/glance /var/lib/glance
+    # chown -R glance:glance /var/lib/glance
+    # fixfiles restore /var/lib/glance
 
 Start glance:
 
-    # systemctl enable glance-{api,registry}
-    # systemctl start glance-{api,registry}
+    # systemctl enable openstack-glance-{api,registry}
+    # systemctl start openstack-glance-{api,registry}
 
 Verify that Glance is operating correctly:
 
@@ -248,9 +294,14 @@ Neutron plugins you are using (such as `openstack-neutron-ml2` and
     # yum -y install openstack-neutron{,-ml2,-openvswitch}
 
 Copy the Neutron configuration files from your RHEL6 controller into
-`/etc/neutron` on the RHEL7 controller.  You will need to correct
-permissions on these files, because the `neutron` UID and GID on your
-system may be different:
+`/etc/neutron` on the RHEL7 controller:
+
+    # rsync -a $BACKUP/etc/neutron/ /etc/neutron/
+
+You will need to correct permissions on these files, because the
+`neutron` UID and GID on your RHEL7 system may differ from the values
+on your RHEL6 system.  The following `find` command will make the
+appropriate changes:
 
     # find /etc/neutron \! -group root -exec chgrp neutron {} \;
 
@@ -263,7 +314,7 @@ Upgrade the Neutron database schema:
 And start Neutron:
 
     # systemctl enable \
-      neutron-{dhcp-agent,l3-agent,metadata-agent,openvswitch-agent,server}
+      neutron-{netns-cleanup,ovs-cleanup,dhcp-agent,l3-agent,metadata-agent,openvswitch-agent,server}
     # systemctl start \
       neutron-{dhcp-agent,l3-agent,metadata-agent,openvswitch-agent,server}
 
@@ -274,6 +325,22 @@ Verify that Neutron agents have started and are reporting properly:
 
     # neutron agent-list
 
+The output of this command should show the `openvswitch` agents on
+your compute hosts:
+
+    +--------------------------------------+--------------------+------------------+-------+----------------+---------------------------+
+    | id                                   | agent_type         | host             | alive | admin_state_up | binary                    |
+    +--------------------------------------+--------------------+------------------+-------+----------------+---------------------------+
+    .
+    .
+    .
+    | 15736a0a-acc2-4227-b0e3-3bb720351870 | Open vSwitch agent | compute-1.local  | :-)   | True           | neutron-openvswitch-agent |
+    | f87cc391-5263-4808-bf80-8b7d3caf8716 | Open vSwitch agent | compute-0.local  | :-)   | True           | neutron-openvswitch-agent |
+    +--------------------------------------+--------------------+------------------+-------+----------------+---------------------------+
+
+These listings should show `:-)` in the `alive` column (note that this
+information may take a minute to update, so be patient).
+
 ### Install Nova
 
 Install the `openstack-nova` package:
@@ -281,13 +348,20 @@ Install the `openstack-nova` package:
     # yum -y install openstack-nova
 
 Copy the Nova configuration files from your RHEL6 controller into
-`/etc/nova` on your RHEL7 controller.  Modify `nova.conf` to cap the
-compute API at an Icehouse-compatible version by adding the following
-to the `upgrade-levels` section of the config file:
+`/etc/nova` on your RHEL7 controller:
+
+    # rsync -a $BACKUP/etc/nova/ /etc/nova/
+
+Modify `nova.conf` to cap the compute API at an Icehouse-compatible
+version by adding the following to the `upgrade-levels` section of the
+config file:
 
     [upgrade-levels]
-    compute = icehouse
-    conductor = icehouse
+    compute = 3.23.1
+    conductor = 3.23.1
+
+This is necessary in order for our Juno controller to inter-operate
+with our Icehouse compute nodes.
 
 Upgrade the Nova database schema:
 
@@ -296,16 +370,28 @@ Upgrade the Nova database schema:
 Activate Nova services on your controller:
 
     # systemctl enable \
-      nova-{api,cert,conductor,consoleauth,novncproxy,scheduler}
+      openstack-nova-{api,cert,conductor,consoleauth,novncproxy,scheduler}
     # systemctl start \
-      nova-{api,cert,conductor,consoleauth,novncproxy,scheduler}
+      openstack-nova-{api,cert,conductor,consoleauth,novncproxy,scheduler}
 
 Verify that your Nova services have started correctly:
 
     # nova service-list
 
 You should see both the services on your controller as well as the
-`nova-compute` services running on your compute nodes.
+`nova-compute` services running on your compute nodes:
+
+    +----+------------------+------------------+----------+---------+-------+----------------------------+-----------------+
+    | Id | Binary           | Host             | Zone     | Status  | State | Updated_at                 | Disabled Reason |
+    +----+------------------+------------------+----------+---------+-------+----------------------------+-----------------+
+    .
+    .
+    .
+    | 5  | nova-compute     | compute-0.local  | nova     | enabled | up    | 2015-01-16T14:23:48.000000 | -               |
+    | 6  | nova-compute     | compute-1.local  | nova     | enabled | up    | 2015-01-16T14:23:43.000000 | -               |
+    +----+------------------+------------------+----------+---------+-------+----------------------------+-----------------+
+
+The `nova-compute` services should show `up` in the `State` column.
 
 ### Install Horizon
 
@@ -314,7 +400,10 @@ Install the `openstack-dashboard` package:
     # yum -y install openstack-dashboard
 
 Copy the Horizon configuration files from your RHEL6 controller to
-`/etc/openstack-dashboard' on your RHEL7 controller.
+`/etc/openstack-dashboard' on your RHEL7 controller:
+
+    # rsync -a $BACKUP/etc/openstack-dashboard/ \
+      /etc/openstack-dashboard/
 
 Until [BZ 1174977][] is resolved, you will also need to enable the
 `httpd_can_network_connect` selinux boolean:
@@ -337,16 +426,19 @@ compute nodes.
 ### Migrate Nova instances
 
 Prior to reinstalling a compute node with RHEL7 you should migrate any
-running instances onto other compute nodes.
+running instances onto other compute nodes.  
 
-**NB** As of this writing, upstream bug [1402813][] prevents live
-migrations between Icehouse compute nodes and Juno compute nodes.
-Until that bug is resolved, you will need to use the `nova migrate`
-command to move instances to other hosts:
+If your environment supports live migration, you can use the `nova
+live-migration` command (as a user with administrative credentials):
 
-[1402813]: https://bugs.launchpad.net/nova/+bug/1402813
+    # nova live-migration <uuid>
 
-    # nova migrate <server uuid>
+This will move the instance to another available compute node.
+
+If your environment does not support live migration, you can use the
+`nova migrate` command:
+
+    # nova migrate <uuid>
 
 This will pause the virtual server and resume it on another available
 compute host.  Note that this is a two-step process; once the
@@ -354,10 +446,6 @@ migration completes, your servers will be in the `CONFIRM_RESIZE`
 state and for each server you will need to run:
 
     # nova resize-confirm <server uuid>
-
-Once [1402813][] is resolved you will be able to use the `nova
-live-migration` command to migrate your instances without
-interruption.
 
 **NB**: For the `nova migrate` command to work, the `nova` user on the
 source host must be able to connect using `ssh` to the `nova` user on
@@ -370,23 +458,46 @@ Install RHEL7 on your compute node.
 Install some prerequisite packages:
 
     # yum -y install \
-        openstack-selinux \
-        openvswitch \
-        libvirt \
-        qemu-kvm
+        openstack-selinux
+        openvswitch
 
-Activate the `openvswitch` and `libvirtd` services:
+Activate the `openvswitch` service:
 
-    # systemctl enable openvswitch libvirtd
-    # systemctl start openvswitch libvirtd
+    # systemctl enable openvswitch
+    # systemctl start openvswitch
+
+### Install virtualization support
+
+Install the `libvirt` and `qemu-kvm` packages:
+
+    # yum -y install libvirt qemu-kvm
+
+Restore your libvirtd configuration from backups:
+
+    # cp $BACKUP/etc/libvirt/libvirtd.conf \
+      /etc/libvirtd.conf
+
+Activate the `libvirtd` service:
+
+    # systemctl enable libvirtd
+    # systemctl start libvirtd
 
 ### Restore your iptables rules
 
 Ensure that any local firewall configuration that was defined on your
 RHEL6 compute node is imported into your RHEL7 compute node.  You will
-need to install the `iptables-services` package:
+need to install the `iptables-services` package if it is not already
+installed:
 
     # yum -y install iptables-services
+
+Make sure iptables is stopped:
+
+    # systemctl stop iptables
+
+Restore your iptables configuration from backups:
+
+    # cp $BACKUP/etc/sysconfig/iptables /etc/sysconfig/iptables
 
 And activate the iptables service:
 
@@ -398,6 +509,10 @@ And activate the iptables service:
 Install the Neutron OpenVswitch agent:
 
     # yum -y install openstack-neutron-openvswitch
+
+Restore your Neutron configuration from your backups:
+
+    # rsync -a $BACKUP/etc/neutron/ /etc/neutron/
 
 Activate Neutron services on the host:
 
@@ -413,14 +528,20 @@ Install the `openstack-nova-compute` package:
 
     # yum -y install openstack-nova-compute
 
+Restore your Nova configuration from your backups:
+
+    # rsync -a $BACKUP/etc/nova
+
 Edit `nova.conf` to cap the compute API at an icehouse compatible
 version:
 
     [upgrade-levels]
-    compute = icehouse
-    conductor = icehouse
+    compute = 3.23.1
+
+This is required in order for this Juno compute node to inter-operate
+with other compute nodes still running the Icehouse release.
     
-And start Nova services on the compute host:
+Start Nova services on the compute host:
 
     # systemctl enable openstack-nova-compute
     # systemctl start openstack-nova-compute
