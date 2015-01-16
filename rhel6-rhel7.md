@@ -296,9 +296,9 @@ Upgrade the Nova database schema:
 Activate Nova services on your controller:
 
     # systemctl enable \
-      nova-{api,cert,conductor,consoleauth,novncproxy,scheduler}
+      openstack-nova-{api,cert,conductor,consoleauth,novncproxy,scheduler}
     # systemctl start \
-      nova-{api,cert,conductor,consoleauth,novncproxy,scheduler}
+      openstack-nova-{api,cert,conductor,consoleauth,novncproxy,scheduler}
 
 Verify that your Nova services have started correctly:
 
