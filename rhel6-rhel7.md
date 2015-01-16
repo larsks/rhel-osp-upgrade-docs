@@ -31,6 +31,9 @@ system and copy the appropriate directories:
     # rsync -a /var/lib/glance/ $BACKUP/var/lib/glance/
     # rsync -a /var/lib/nova/ $BACKUP/var/lib/nova/
 
+Here (and in the rest of this document), `$BACKUP` is shorthand for
+wherever you have your backup directory mounted.
+
 ### Configuration files
 
 Ensure that you have complete backups of your OpenStack configuration
