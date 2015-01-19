@@ -286,7 +286,7 @@ Start glance:
 
 Verify that Glance is operating correctly:
 
-    # glance image-list
+    # glance image-list --all-tenants
 
 ### Install Neutron
 
