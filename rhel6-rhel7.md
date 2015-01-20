@@ -517,6 +517,11 @@ Restore your Neutron configuration from your backups:
 
     # rsync -a $BACKUP/etc/neutron/ /etc/neutron/
 
+Reset permissions on the neutron config files (as we did for the
+controller):
+
+    # find /etc/neutron \! -group root -exec chgrp neutron {} \;
+
 Activate Neutron services on the host:
 
     # systemctl enable neutron-openvswitch-agent neutron-ovs-cleanup
