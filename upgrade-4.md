@@ -33,13 +33,14 @@ service from Icehouse can talk to a Juno control plane.
 
          openstack-db --service nova --update
 
-1. On all the controller nodes, cap the compute RPC API at a version
-   that will still be understood by your Icehouse compute nodes.  Look
-   for the `[upgrade_levels]` section in `/etc/nova/nova.conf` and set
-   the `compute` option like this:
+1. On all the controller nodes, cap the compute and conductor RPC API
+   at a version that will still be understood by your Icehouse compute
+   nodes.  Look for the `[upgrade_levels]` section in
+   `/etc/nova/nova.conf` and set the `compute` option like this:
 
          [upgrade_levels]
-         compute = icehouse
+         compute = 3.23.1
+         conductor = 3.23.1
 
 1. Restart the controller services.  On each controller node:
 
@@ -91,7 +92,7 @@ nodes, you will need to ensure that your Juno nodes have the same
 `upgrade_levels` setting as your controllers:
 
        [upgrade_levels]
-       compute = icehouse
+       compute = 3.23.1
 
 ### Live migration
 
