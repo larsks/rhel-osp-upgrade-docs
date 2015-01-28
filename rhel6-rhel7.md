@@ -212,7 +212,7 @@ Copy the Keystone configuration files from your RHEL6 controller into
 
 Upgrade the Keystone database schema:
 
-    # sudo -u keystone keystone-manage db_sync
+    # openstack-db --service keystone --update
 
 Activate the Keystone service:
 
@@ -247,7 +247,7 @@ If you are using the LVM backend, you will need to update
 
 Upgrade the Cinder database schema:
 
-    # sudo -u cinder cinder-manage db sync
+    # openstack-db --service cinder --update
 
 Activate the Cinder services:
 
@@ -270,9 +270,17 @@ Copy the Glance configuration files from your RHEL6 controller into
 
     # rsync -a $BACKUP/etc/glance/ /etc/glance/
 
+Remount or restore the contents of `/var/lib/glance`:
+
+    # rsync -a $BACKUP/var/lib/glance/ /var/lib/glance/
+
+Or edit your `/etc/fstab` appropriately and:
+
+    # mount /var/lib/glance
+
 Upgrade the Glance database schema:
 
-    # sudo -u glance glance-manage db sync
+    # openstack-db --service glance --update
 
 Ensure correct ownership on the Glance data directory:
 
@@ -310,9 +318,7 @@ appropriate changes:
 
 Upgrade the Neutron database schema:
 
-    # neutron-db-manage --config-file /etc/neutron/neutron.conf \
-      --config-file /etc/neutron/plugin.ini \
-      upgrade head
+    # openstack-db --service neutron --update
 
 And start Neutron:
 
@@ -355,6 +361,14 @@ Copy the Nova configuration files from your RHEL6 controller into
 
     # rsync -a $BACKUP/etc/nova/ /etc/nova/
 
+Remount or restore the contents of `/var/lib/nova`:
+
+    # rsync -a $BACKUP/var/lib/nova/ /var/lib/nova/
+
+Or edit your `/etc/fstab` appropriately and:
+
+    # mount /var/lib/nova
+
 Modify `nova.conf` to cap the compute API at an Icehouse-compatible
 version by adding the following to the `upgrade-levels` section of the
 config file:
@@ -368,7 +382,7 @@ with our Icehouse compute nodes.
 
 Upgrade the Nova database schema:
 
-    # sudo -u nova nova-manage db sync
+    # openstack-db --service nova --update
 
 Activate Nova services on your controller:
 
@@ -539,6 +553,14 @@ Install the `openstack-nova-compute` package:
 Restore your Nova configuration from your backups:
 
     # rsync -a $BACKUP/etc/nova
+
+Remount or restore the contents of `/var/lib/nova`:
+
+    # rsync -a $BACKUP/var/lib/nova/ /var/lib/nova/
+
+Or edit your `/etc/fstab` appropriately and:
+
+    # mount /var/lib/nova
 
 Edit `nova.conf` to cap the compute API at an icehouse compatible
 version:
