@@ -4,7 +4,10 @@ MDDOCS= \
 	database-upgrades.md \
 	overview.md \
 	service.md \
+	service-ha.md \
+	restart-mariadb-ha.md \
 	upgrade-1.md \
+	upgrade-1-ha.md \
 	upgrade-2.md \
 	upgrade-3.md \
 	upgrade-cinder.md \
