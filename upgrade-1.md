@@ -6,7 +6,7 @@ upgrade process is complete.
 
 On all of your hosts:
 
-1. Install the Juno yum repository.
+1. Install the Kilo yum repository.
 
 1. [Stop all your OpenStack services][stop].
 
@@ -14,7 +14,10 @@ On all of your hosts:
 
         # yum upgrade
 
-1. Perform [database schema upgrades][dbsync] for all of your services.
+1. Perform any necessary [configuration updates][config] for each of
+   your services.
+
+1. Perform [database schema upgrades][dbsync] for each of your services.
 
 1. Review newly installed configuration files.
 
@@ -24,10 +27,16 @@ On all of your hosts:
      your Icehouse deployment, but you will want to review the
      `.rpmnew` files for any required changes.
 
+     New versions of OpenStack services may deprecate certain
+     configuration options.  You should also review your OpenStack
+     logs for any deprecation warnings, because these may cause
+     problems during a future upgrade.
+
 1. [Start all your OpenStack services][start].
 
 [stop]: service.html#stop
 [start]: service.html#start
+[config]: config-upgrades.html
 [dbsync]: database-upgrades.html
 [horizon]: upgrade-horizon.html
 [neutron]: upgrade-neutron.html

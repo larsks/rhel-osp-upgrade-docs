@@ -1,6 +1,6 @@
-# Upgrading from Icehouse to Juno: Overview
+# Upgrading from Juno to Kilo: Overview
 
-Note that the following holds true for all of the following scenarios:
+Note that the following holds true for all of the described upgrade scenarios:
 
 - All scenarios involve some service interruptions.
 - Running instances will not be affected by the upgrade process unless
@@ -22,55 +22,24 @@ you wait for database schema upgrades to complete.
 
 Read about this scenario in [Upgrade Scenario 1][1].
 
-## Scenario 2: Service-by-service
+## Scenario 2: Service-by-service with live compute upgrade
 
-In this scenario, you upgrade one service at a time.
+In this scenaior, you upgrade one service at a time.  You perform
+rolling upgrades of your compute hosts, taking advantage of the fact
+that `nova-compute` from Juno can communicate with a Kilo control
+plane.
 
-**Pros**: Rather than a single large service outage you are able to
-stage outages to specific services.  You schedule potentially
-longer upgrades -- such as the compute service upgrade in a large
-environment -- separately from upgrades that take less time.
-
-**Cons**: You will still have an interruption to your Nova APIs and
-compute nodes.
-
-Read about this scenario in [Upgrade Scenario 2][2].
-
-## Scenario 3: Service-by-service with parallel compute
-
-For most services this scenario is identical to scenario 2, with the
-exception of the Nova controller and compute services.  Rather than
-upgrading your existing Nova environment as part of this process, you
-deploy new nodes running the Juno Nova services.  You wait for
-existing workloads on your Icehouse compute nodes to complete (or
-migrate them by hand), and when an Icehouse compute node is no longer
-hosting any instances you upgrade the compute service on that node.
-
-**Pros**: This minimizes interruptions to your compute service.
-Existing workloads can run indefinitely, and you do not need to wait
-for a database migration.
-
-**Cons**: This requires additional hardware resources to bring up the
-Icehouse Nova nodes.
-
-Read about this scenario in [Upgrade Scenario 3][3].
-
-## Scenario 4: Service-by-service with live compute upgrade
-
-For most services this scenario is identical to scenario 2, with the
-exception of the Nova controller and compute services.  In this
-scenario, you will take advantage of the fact that Icehouse `nova-compute` can communicate with Juno control services in order to perform a rolling upgrade of compute services across your environment.
-
-Like scenario 3, this process minimizes the downtime to your existing
-compute workloads, but does not require a parallel environment to
-support the process.
+**Pros**: This process minimizes the downtime to your existing
+compute workloads.
 
 This is our recommended upgrade procedure for most environments.
 
-Read about this scenario in [Upgrade Scenario 4][4].
+**Cons**: This is a more complex procedure, and mistakes or
+undiscovered compatibility issues can unexpectedly turn it into
+Scenario 1.
+
+Read about this scenario in [Upgrade Scenario 2][2].
 
 [1]: upgrade-1.html
 [2]: upgrade-2.html
-[3]: upgrade-3.html
-[4]: upgrade-4.html
 

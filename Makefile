@@ -2,6 +2,7 @@ MARKDOWN = marked
 
 MDDOCS= \
 	database-upgrades.md \
+	config-upgrades.md \
 	overview.md \
 	service.md \
 	service-ha.md \
