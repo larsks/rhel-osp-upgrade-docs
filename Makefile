@@ -1,29 +1,34 @@
 MARKDOWN = marked
 
 MDDOCS= \
-	database-upgrades.md \
-	config-upgrades.md \
-	overview.md \
-	service.md \
-	service-ha.md \
-	restart-mariadb-ha.md \
-	upgrade-1.md \
-	upgrade-1-ha.md \
-	upgrade-2.md \
-	upgrade-3.md \
-	upgrade-cinder.md \
-	upgrade-glance.md \
-	upgrade-horizon.md \
-	upgrade-keystone.md \
-	upgrade-nova.md \
-	upgrade-neutron.md \
-	upgrade-swift.md \
+	config-keystone.md \
+	config-neutron.md \
+	config-nova.md \
+	config-upgrade.md \
+	database-keystone.md \
+	database-nova.md \
+	database-upgrade.md \
 	final-package-upgrade.md \
-	parallel-nova.md \
-	upgrade-4.md \
-	neutron-nova-notifications.md \
-	qpid-to-rabbitmq.md \
-	rhel6-rhel7.md
+	overview.md \
+	post-upgrade.md \
+	pre-upgrade.md \
+	service.md \
+	upgrade-1.md \
+	upgrade-2-ha.md \
+	upgrade-2.md \
+	upgrade-ceilometer-ha.md \
+	upgrade-cinder-ha.md \
+	upgrade-compute.md \
+	upgrade-glance-ha.md \
+	upgrade-heat-ha.md \
+	upgrade-horizon-ha.md \
+	upgrade-keystone-ha.md \
+	upgrade-mariadb-ha.md \
+	upgrade-mongodb-ha.md \
+	upgrade-neutron-ha.md \
+	upgrade-neutron.md \
+	upgrade-nova-ha.md \
+	upgrade-nova.md
 
 HTMLDOCS= $(MDDOCS:.md=.html)
 
@@ -45,4 +50,6 @@ all: $(HTMLDOCS)
 
 clean:
 	rm -f $(HTMLDOCS)
+
+$(HTMLDOCS): head foot
 

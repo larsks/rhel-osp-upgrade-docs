@@ -38,8 +38,11 @@ This is our recommended upgrade procedure for most environments.
 undiscovered compatibility issues can unexpectedly turn it into
 Scenario 1.
 
-Read about this scenario in [Upgrade Scenario 2][2].
+Read about this scenario in [Upgrade Scenario 2 (HA)][2] if you are
+running an HA environment, or [Upgrade Scenaior 2 (non-HA)][3] if you
+are running in a non-HA environment.
 
 [1]: upgrade-1.html
-[2]: upgrade-2.html
+[2]: upgrade-2-ha.html
+[3]: upgrade-2.html
 

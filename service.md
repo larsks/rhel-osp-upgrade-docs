@@ -1,10 +1,8 @@
 # Managing OpenStack services
 
-## <a name="stop">Stopping OpenStack services</a>
+## <a name="stop">Stopping all OpenStack services</a>
 
 ### In an HA environment
-
-On your controllers:
 
 1. Disable OpenStack services on the compute nodes.  On each compute
    node, run:
@@ -26,7 +24,7 @@ Run the following command on all of your OpenStack hosts:
 
     # openstack-service stop
 
-## <a name="start">Starting OpenStack services</a>
+## <a name="start">Starting all OpenStack services</a>
 
 ### In an HA environment
 
@@ -37,7 +35,7 @@ Run the following command on all of your OpenStack hosts:
          pcs property set stop_all_resources=false
 
     Then wait until the output of `pcs status` shows that all
-    resources have started.
+    resources have started (this may take several minutes).
 
 1. Restart OpenStack services on the compute nodes.  On each compute
    node, run:

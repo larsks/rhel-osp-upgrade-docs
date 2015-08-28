@@ -17,7 +17,15 @@ On all of your hosts:
 1. Perform any necessary [configuration updates][config] for each of
    your services.
 
-1. Perform [database schema upgrades][dbsync] for each of your services.
+1. Perform [database schema upgrades][dbsync] for each of your services:
+
+    - Keystone
+    - Cinder
+    - Glance
+    - Neutron
+    - Nova
+    - Heat
+    - Ceilometer (only if you are using the MySQL backend)
 
 1. Review newly installed configuration files.
 
@@ -36,8 +44,8 @@ On all of your hosts:
 
 [stop]: service.html#stop
 [start]: service.html#start
-[config]: config-upgrades.html
-[dbsync]: database-upgrades.html
+[config]: config-upgrade.html
+[dbsync]: database-upgrade.html
 [horizon]: upgrade-horizon.html
 [neutron]: upgrade-neutron.html
 

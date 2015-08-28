@@ -14,5 +14,6 @@
     <ul class="menu">
       <li><a href="overview.html">overview</a></li>
       <li><a href="upgrade-1.html">scenario 1</a></li>
-      <li><a href="upgrade-2.html">scenario 2</a></li>
+      <li><a href="upgrade-2.html">scenario 2 (non-HA)</a></li>
+      <li><a href="upgrade-2-ha.html">scenario 2 (HA)</a></li>
     </ul>

@@ -1,9 +1,33 @@
-# Scenario 2: One service at a time
+# Scenario 2: One service at a time (non-HA version)
 
 In this scenario, you upgrade one service at a time.
 
-The procedure for upgrading an OpenStack service generally looks
-something like:
+## Pre-upgrade
+
+Perform the necessary [pre-upgrade][] steps.
+
+[pre-upgrade]: pre-upgrade.md
+
+## Service upgrades
+
+Upgrade each of your services, following the process described above.
+The following is a reasonable order in which to perform the upgrade:
+
+1. Keystone
+1. Cinder
+1. Glance
+1. Cinder
+1. Heat
+1. Ceilometer
+1. [Nova][]
+1. [Neutron][]
+1. Horizon
+
+[nova]: upgrade-nova.html
+[neutron]: upgrade-neutron.html
+
+The procedure for upgrading an individual OpenStack service looks like
+this:
 
 1. [Stop the service][stop]:
 
@@ -13,13 +37,8 @@ something like:
 
          # yum upgrade \*<service>\*
 
-1. Update the database schema for that service:
-
-         # openstack-db --service <service> --update
-
-     See the [Database Upgrades][dbsync] document for the specific
-     command used by each individual service to perform the database
-     schema upgrade.
+1. [Update the database schema for that
+   service](database-upgrade.html)
 
 1. [Restart the service][start]:
 
@@ -27,45 +46,14 @@ something like:
 
 [stop]: service.html#stop
 [start]: service.html#start
-[dbsync]: database-upgrades.html
 
-## Pre-upgrade
-
-On all of your hosts:
-
-1. Install the Juno yum repository.
-
-## Service upgrades
-
-Upgrade each of your services.  The following is a reasonable order in
-which to perform the upgrade:
-
-1. [Keystone][]
-1. [Swift][]
-1. [Cinder][]
-1. [Glance][]
-1. [Neutron][] (only if you are using Neutron
-   networking in your OpenStack environment)
-1. [Horizon][]
-1. [Nova][]
-
-After you have upgraded each service, you should test to make sure
-that the service is functioning properly.  You will also want to
-review any new (`*.rpmnew`) configuration files installed by the
-upgraded package.
-
-[keystone]: upgrade-keystone.html
-[swift]: upgrade-swift.html
-[cinder]: upgrade-cinder.html
-[glance]: upgrade-glance.html
-[neutron]: upgrade-neutron.html
-[nova]: upgrade-nova.html
-[horizon]: upgrade-horizon.html
+Some of the above services need additional steps beyond the standard
+process described above; follow the links in the list of services to see
+these instructions.
 
 # Post-upgrade
 
-Perform a [final package upgrade][final] to ensure that all of your
-installed packages are at the latest version.
+Perform the necessary [post-upgrade][] steps.
 
-[final]: final-package-upgrade.html
+[post-upgrade]: post-upgrade.md
 
