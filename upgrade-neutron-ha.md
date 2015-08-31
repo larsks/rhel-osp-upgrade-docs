@@ -21,7 +21,7 @@
 
         systemctl daemon-reload
 
-1. [Update the Neutron database schema](database-upgrades.html)
+1. [Update the Neutron database schema](database-upgrade.html)
 
 1. [Update the Neutron rootwrap configuration](config-neutron.html)
 
