@@ -30,9 +30,9 @@ On all of your hosts:
 1. Review newly installed configuration files.
 
      The upgraded packages will have installed `.rpmnew` files
-     appropriate to the Juno version of the service.  In general,
-     the Juno services will run using the configuration files from
-     your Icehouse deployment, but you will want to review the
+     appropriate to the Kilo version of the service.  In general,
+     the Kilo services will run using the configuration files from
+     your Juno deployment, but you will want to review the
      `.rpmnew` files for any required changes.
 
      New versions of OpenStack services may deprecate certain
