@@ -16,7 +16,7 @@
 
         systemctl daemon-reload
 
-1. [Update the Glance database schema]database-upgrades.html)
+1. [Update the Glance database schema](database-upgrades.html)
 
 1. Restart Glance resources in Pacemaker:
 

@@ -17,9 +17,9 @@
 
         systemctl daemon-reload
 
-1. [Correct the Keystone configuration]config-keystone.html)
+1. [Correct the Keystone configuration](config-keystone.html)
 
-1. [Update the Keystone database schema]database-upgrades.html)
+1. [Update the Keystone database schema](database-upgrades.html)
 
 1. Restart the service by running the following on each of your
    controllers:

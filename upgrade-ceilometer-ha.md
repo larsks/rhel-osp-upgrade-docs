@@ -2,13 +2,13 @@
 
 1. Stop all Ceilometer resources in Pacemaker:
 
-    pcs resource disable openstack-ceilometer-central
-    pcs resource disable openstack-ceilometer-api-clone
-    pcs resource disable openstack-ceilometer-alarm-evaluator-clone
-    pcs resource disable openstack-ceilometer-collector-clone
-    pcs resource disable openstack-ceilometer-notification-clone
-    pcs resource disable openstack-ceilometer-alarm-notifier-clone
-    pcs resource disable ceilometer-delay-clone
+        pcs resource disable openstack-ceilometer-central
+        pcs resource disable openstack-ceilometer-api-clone
+        pcs resource disable openstack-ceilometer-alarm-evaluator-clone
+        pcs resource disable openstack-ceilometer-collector-clone
+        pcs resource disable openstack-ceilometer-notification-clone
+        pcs resource disable openstack-ceilometer-alarm-notifier-clone
+        pcs resource disable ceilometer-delay-clone
 
 1. Wait until the output of `pcs status` shows that the above services
    have stopped running.

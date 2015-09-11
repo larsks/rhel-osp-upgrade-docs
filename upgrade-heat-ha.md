@@ -18,7 +18,7 @@
 
         systemctl daemon-reload
 
-1. [Update the Heat database schema]database-upgrades.html)
+1. [Update the Heat database schema](database-upgrades.html)
 
 1. Restart Heat resources in Pacemaker:
 

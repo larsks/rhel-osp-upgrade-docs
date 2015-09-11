@@ -4,7 +4,7 @@
 
 Perform the necessary [pre-upgrade][] steps.
 
-[pre-upgrade]: pre-upgrade.md
+[pre-upgrade]: pre-upgrade.html
 
 ## Service upgrades
 
@@ -42,5 +42,5 @@ Finally:
 
 Perform the necessary [post-upgrade][] steps.
 
-[post-upgrade]: post-upgrade.md
+[post-upgrade]: post-upgrade.html
 

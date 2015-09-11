@@ -17,7 +17,7 @@
 
         systemctl daemon-reload
 
-1. [Update the Cinder database schema]database-upgrades.html)
+1. [Update the Cinder database schema](database-upgrades.html)
 
 1. Restart all Cinder resources in Pacemaker:
 

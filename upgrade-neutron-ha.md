@@ -33,6 +33,11 @@
         pcs resource enable neutron-openvswitch-agent-clone
         pcs resource enable neutron-server-clone
 
+1. Return the cleanup agents to Pacemaker control
+
+        pcs resource manage neutron-ovs-cleanup-clone
+        pcs resource manage neutron-netns-cleanup-clone
+
 1. Wait until the output of `pcs status` shows that the above
    resources are running.
 

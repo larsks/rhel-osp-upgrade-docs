@@ -2,11 +2,11 @@
 
 1. Stop all Nova resources in Pacemaker:
 
-    pcs resource disable openstack-nova-novncproxy-clone
-    pcs resource disable openstack-nova-consoleauth-clone
-    pcs resource disable openstack-nova-conductor-clone
-    pcs resource disable openstack-nova-api-clone
-    pcs resource disable openstack-nova-scheduler-clone
+        pcs resource disable openstack-nova-novncproxy-clone
+        pcs resource disable openstack-nova-consoleauth-clone
+        pcs resource disable openstack-nova-conductor-clone
+        pcs resource disable openstack-nova-api-clone
+        pcs resource disable openstack-nova-scheduler-clone
 
 1. Wait until the output of `pcs status` shows that the above services
    have stopped running.

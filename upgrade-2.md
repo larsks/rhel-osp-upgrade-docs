@@ -6,7 +6,7 @@ In this scenario, you upgrade one service at a time.
 
 Perform the necessary [pre-upgrade][] steps.
 
-[pre-upgrade]: pre-upgrade.md
+[pre-upgrade]: pre-upgrade.html
 
 ## Service upgrades
 
@@ -55,5 +55,5 @@ these instructions.
 
 Perform the necessary [post-upgrade][] steps.
 
-[post-upgrade]: post-upgrade.md
+[post-upgrade]: post-upgrade.html
 

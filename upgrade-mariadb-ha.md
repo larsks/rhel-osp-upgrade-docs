@@ -23,7 +23,7 @@ steps on one host before starting the process on another host.
 
 1. Upgrade the relevant packages.
 
-        yum ugprade '*mariadb*' '*galera*'
+        yum upgrade '*mariadb*' '*galera*'
 
 1. Allow Pacemaker to schedule the galera resource on the local node:
 
