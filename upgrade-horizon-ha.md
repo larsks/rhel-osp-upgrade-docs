@@ -16,6 +16,8 @@
 
         systemctl daemon-reload
 
+1. [Correct the Horizon configuration](config-horizon.html)
+
 1. Restart the Horizon resource in Pacemaker:
 
         pcs resource enable horizon-clone

@@ -5,4 +5,5 @@ services before the upgraded versions will run correctly:
 
 - [Keystone](config-keystone.html)
 - [Neutron](config-neutron.html)
+- [Horizon](config-horizon.html)
 

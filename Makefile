@@ -5,6 +5,7 @@ MDDOCS= \
 	config-neutron.md \
 	config-nova.md \
 	config-upgrade.md \
+	config-horizon.md \
 	database-keystone.md \
 	database-nova.md \
 	database-upgrade.md \
