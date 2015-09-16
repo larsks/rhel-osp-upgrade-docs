@@ -22,7 +22,7 @@
 1. [Update the Nova database schema](database-upgrades.html)
 
 1. If you wish to perform a rolling upgrade of your compute servers,
-   [set Nova API version limits](config-nova.md#add) to allow your
+   [set Nova API version limits](config-nova.html#add) to allow your
    Juno compute hosts to inter-operate with your Kilo compute hosts
    and controllers.
 
